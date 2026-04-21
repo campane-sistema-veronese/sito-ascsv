@@ -1,0 +1,146 @@
+---
+import { getCollection } from 'astro:content'
+
+const CATEGORY_ORDER = [
+  'Modulistica gare',
+  'Itinerari',
+  'Storia e cultura',
+  'Gare a 5 campane',
+  'Gare a 6 campane',
+  'Gare a 8 campane',
+  'Gare a 9 campane',
+  'Altre gare',
+  'Suonate classiche',
+] as const
+
+const collection = await getCollection('documents')
+const documents = collection.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+
+const groupedByCategory = CATEGORY_ORDER.map((category) => ({
+  category,
+  docs: documents.filter((doc) => doc.data.category === category),
+})).filter((group) => group.docs.length > 0)
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('it-IT', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  })
+---
+
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Archivio documenti | ASCSV</title>
+    <style>
+      :root {
+        --bg: #f7f3e8;
+        --card: #fffdf8;
+        --text: #1f1c17;
+        --muted: #5e5344;
+        --accent: #8f2d1f;
+        --border: #d8ccb9;
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Georgia', 'Times New Roman', serif;
+        background: radial-gradient(circle at top right, #efe5d3 0%, var(--bg) 45%);
+        color: var(--text);
+      }
+
+      main {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 2rem 1rem 3rem;
+      }
+
+      h1 {
+        margin: 0 0 0.5rem;
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
+      }
+
+      p.intro {
+        margin: 0 0 1.5rem;
+        color: var(--muted);
+      }
+
+      details {
+        border: 1px solid var(--border);
+        border-radius: 0.6rem;
+        background: var(--card);
+        margin-bottom: 0.9rem;
+        overflow: hidden;
+      }
+
+      summary {
+        cursor: pointer;
+        padding: 0.9rem 1rem;
+        font-weight: 700;
+      }
+
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0 1rem 1rem;
+        display: grid;
+        gap: 0.7rem;
+      }
+
+      li {
+        border: 1px solid var(--border);
+        border-radius: 0.45rem;
+        padding: 0.7rem;
+      }
+
+      .doc-title {
+        display: block;
+        font-weight: 700;
+      }
+
+      .meta {
+        margin: 0.25rem 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      a {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Archivio documenti</h1>
+      <p class="intro">Documenti PDF organizzati per categoria.</p>
+
+      {
+        groupedByCategory.length === 0 ? (
+          <p>Nessun documento disponibile.</p>
+        ) : (
+          groupedByCategory.map((group, index) => (
+            <details open={index === 0}>
+              <summary>
+                {group.category} ({group.docs.length})
+              </summary>
+              <ul>
+                {group.docs.map((doc) => (
+                  <li>
+                    <span class="doc-title">{doc.data.title}</span>
+                    <p class="meta">{formatDate(doc.data.date)}</p>
+                    <p>{doc.data.description}</p>
+                    <a href={doc.data.file} download>
+                      Scarica PDF
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ))
+        )
+      }
+    </main>
+  </body>
+</html>

@@ -3,14 +3,79 @@
 ---
 
 <html lang="it">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>ASCSV - Associazione Suonatori di Campane a Sistema Veronese</title>
-	</head>
-	<body>
-		<h1>ASCSV - Associazione Suonatori di Campane a Sistema Veronese</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>ASCSV - Associazione Suonatori di Campane a Sistema Veronese</title>
+    <style>
+      :root {
+        --bg: #f7f3e8;
+        --card: #fffdf8;
+        --text: #1f1c17;
+        --muted: #5e5344;
+        --accent: #8f2d1f;
+        --border: #d8ccb9;
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Georgia', 'Times New Roman', serif;
+        background: radial-gradient(circle at top right, #efe5d3 0%, var(--bg) 45%);
+        color: var(--text);
+      }
+
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem 3rem;
+      }
+
+      h1 {
+        margin-bottom: 0.6rem;
+      }
+
+      p {
+        color: var(--muted);
+        max-width: 70ch;
+      }
+
+      .nav {
+        display: flex;
+        gap: 0.8rem;
+        margin-top: 1.2rem;
+        flex-wrap: wrap;
+      }
+
+      a.btn {
+        text-decoration: none;
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 0.65rem 0.9rem;
+        border-radius: 0.5rem;
+        font-weight: 700;
+      }
+
+      a.btn.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>ASCSV - Associazione Suonatori di Campane a Sistema Veronese</h1>
+      <p>
+        Benvenuto nel portale documentale. Qui puoi consultare l'archivio PDF diviso per categoria e gestire i contenuti
+        dall'area amministrazione.
+      </p>
+      <div class="nav">
+        <a class="btn primary" href="/archivio">Apri archivio</a>
+        <a class="btn" href="/admin">Area admin</a>
+      </div>
+    </main>
+  </body>
 </html>

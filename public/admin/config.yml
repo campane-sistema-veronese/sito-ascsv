@@ -1,0 +1,45 @@
+backend:
+  name: github
+  repo: campane-sistema-veronese/sito-ascsv
+  branch: main
+
+local_backend: true
+
+media_folder: public/docs
+public_folder: /docs
+
+collections:
+  - name: documents
+    label: Documenti
+    folder: src/content/documents
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}--{{fields.slug}}'
+    fields:
+      - { label: Titolo, name: title, widget: string, hint: 'Titolo leggibile per gli utenti' }
+      - {
+          label: Slug,
+          name: slug,
+          widget: string,
+          hint: 'solo minuscole, numeri e trattini',
+          pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Usa solo minuscole, numeri e trattini'],
+        }
+      - { label: Descrizione, name: description, widget: text }
+      - { label: Data, name: date, widget: datetime, format: 'YYYY-MM-DD', time_format: false }
+      - {
+          label: Categoria,
+          name: category,
+          widget: select,
+          options:
+            [
+              'Modulistica gare',
+              'Itinerari',
+              'Storia e cultura',
+              'Gare a 5 campane',
+              'Gare a 6 campane',
+              'Gare a 8 campane',
+              'Gare a 9 campane',
+              'Altre gare',
+              'Suonate classiche',
+            ],
+        }
+      - { label: File PDF, name: file, widget: file }
