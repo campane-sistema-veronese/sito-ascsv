@@ -1,0 +1,20 @@
+---
+const {
+  title = 'ASCSV — Associazione Suonatori di Campane',
+  subtitle = 'Custodi di una melodia antica',
+  ctaText = 'Scopri di più',
+  ctaHref = '#about',
+  image = '/images/MinerbeInterno.jpg',
+  imageAlt = 'Interno di Minerbe',
+} = Astro.props
+---
+
+<section class="relative h-[60vh]" role="region" aria-label="Hero">
+  <img src={image} alt={imageAlt} class="absolute inset-0 w-full h-full object-cover" />
+  <div class="absolute inset-0 bg-black/50"></div>
+  <div class="relative z-10 max-w-4xl mx-auto text-center text-white py-20 px-6">
+    <h1 class="text-4xl md:text-6xl font-bold">{title}</h1>
+    <p class="mt-4 text-lg md:text-2xl">{subtitle}</p>
+    <a href={ctaHref} class="inline-block mt-8 bg-white text-black px-6 py-3 rounded-md">{ctaText}</a>
+  </div>
+</section>

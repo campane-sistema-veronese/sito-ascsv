@@ -1,5 +1,7 @@
 ---
-
+import Header from '../components/Header.astro'
+import Hero from '../components/Hero.astro'
+import '../styles/global.css'
 ---
 
 <html lang="it">
@@ -9,73 +11,82 @@
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>ASCSV - Associazione Suonatori di Campane a Sistema Veronese</title>
-    <style>
-      :root {
-        --bg: #f7f3e8;
-        --card: #fffdf8;
-        --text: #1f1c17;
-        --muted: #5e5344;
-        --accent: #8f2d1f;
-        --border: #d8ccb9;
-      }
-
-      body {
-        margin: 0;
-        font-family: 'Georgia', 'Times New Roman', serif;
-        background: radial-gradient(circle at top right, #efe5d3 0%, var(--bg) 45%);
-        color: var(--text);
-      }
-
-      main {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 2rem 1rem 3rem;
-      }
-
-      h1 {
-        margin-bottom: 0.6rem;
-      }
-
-      p {
-        color: var(--muted);
-        max-width: 70ch;
-      }
-
-      .nav {
-        display: flex;
-        gap: 0.8rem;
-        margin-top: 1.2rem;
-        flex-wrap: wrap;
-      }
-
-      a.btn {
-        text-decoration: none;
-        background: var(--card);
-        border: 1px solid var(--border);
-        color: var(--text);
-        padding: 0.65rem 0.9rem;
-        border-radius: 0.5rem;
-        font-weight: 700;
-      }
-
-      a.btn.primary {
-        background: var(--accent);
-        border-color: var(--accent);
-        color: #fff;
-      }
-    </style>
   </head>
-  <body>
-    <main>
-      <h1>ASCSV - Associazione Suonatori di Campane a Sistema Veronese</h1>
-      <p>
-        Benvenuto nel portale documentale. Qui puoi consultare l'archivio PDF diviso per categoria e gestire i contenuti
-        dall'area amministrazione.
-      </p>
-      <div class="nav">
-        <a class="btn primary" href="/archivio">Apri archivio</a>
-        <a class="btn" href="/admin">Area admin</a>
-      </div>
+  <body class="antialiased text-gray-900">
+    <a
+      href="#main"
+      class="sr-only focus:absolute focus:top-4 focus:left-4 focus:bg-white focus:text-black focus:px-3 focus:py-2"
+      >Vai al contenuto</a
+    >
+    <Header />
+
+    <main id="main">
+      <Hero image="/images/MinerbeInterno.jpg" />
+
+      <section id="about" class="max-w-4xl mx-auto p-8 grid md:grid-cols-2 gap-6 items-center">
+        <div>
+          <h2 class="text-2xl font-semibold">Chi siamo</h2>
+          <p class="mt-4 leading-relaxed">
+            L’Associazione Suonatori di Campane a Sistema Veronese è nata nel 1983, allo scopo di riunire e formare
+            tutte le persone che condividono questa passione e, allo stesso tempo, diffondere la cultura campanaria nel
+            territorio. Le nostre squadre prestano servizio di suono in un zona molto estesa, che spazia tra le province
+            di Verona, Vicenza, Padova, Brescia e Mantova. La famiglia di ASCSV ospita più di 2000 iscritti tra
+            suonatori e simpatizzanti, ed è la realtà più grande a livello italiano. Ogni anno organizza, in
+            collaborazione con le squadre, manifestazioni quali raduni, gare, rassegne, corsi di formazione e molto
+            altro, cercando di formare una comunità viva.
+          </p>
+        </div>
+        <div>
+          <img
+            src="/images/VeronaRect.jpg"
+            alt="Veduta di Verona"
+            class="w-full rounded-lg object-cover h-64 md:h-[28rem]"
+          />
+        </div>
+      </section>
+
+      <section id="suono" class="max-w-6xl mx-auto p-8 grid md:grid-cols-2 gap-8 items-center">
+        <div>
+          <img
+            src="/images/Suonatori2.jpeg"
+            alt="Suonatori"
+            class="w-full rounded-lg shadow-lg object-cover h-64 md:h-[36rem]"
+          />
+        </div>
+        <div>
+          <h2 class="text-3xl font-bold">Il suono alla Veronese</h2>
+          <p class="mt-4 leading-relaxed">
+            Il suono alla veronese è nato nel XVIII secolo ed è il più recente a campane “giranti”. Esso permette di
+            eseguire veri e propri brani musicali, in cui ogni suonatore controlla una campana guidato da un sapiente
+            maestro.
+          </p>
+        </div>
+      </section>
+
+      <section id="unesco" class="max-w-4xl mx-auto p-8">
+        <h2 class="text-2xl font-semibold">Patrimonio UNESCO</h2>
+        <div class="mt-4 grid md:grid-cols-2 gap-6 items-center">
+          <p>
+            Dal 2024 il suono manuale delle campane a sistema veronese è stato riconosciuto come Patrimonio Immateriale
+            dell’Umanità dall’UNESCO, un traguardo importante che testimonia l’unicità e il valore di questa tradizione.
+          </p>
+          <img src="/images/Duomo.jpg" alt="Duomo" class="w-full rounded-lg object-cover h-48 md:h-56" />
+        </div>
+      </section>
+
+      <section id="gallery" class="max-w-6xl mx-auto p-8">
+        <h2 class="text-2xl font-semibold mb-4">Galleria</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <img src="/images/CampanileMobileGiorno.jpg" alt="Campanile" class="w-full h-40 object-cover rounded-md" />
+          <img src="/images/MinerbeInterno.jpg" alt="Interno Minerbe" class="w-full h-40 object-cover rounded-md" />
+          <img src="/images/Verona.jpg" alt="Verona" class="w-full h-40 object-cover rounded-md" />
+          <img
+            src="/images/VeronaRect.jpg"
+            alt="Vista rettangolare Verona"
+            class="w-full h-40 object-cover rounded-md"
+          />
+        </div>
+      </section>
     </main>
   </body>
 </html>

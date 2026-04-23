@@ -12,8 +12,10 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.2.4",
     "astro": "^6.1.8",
-    "decap-cms-app": "^3.12.2"
+    "decap-cms-app": "^3.12.2",
+    "tailwindcss": "^4.2.4"
   },
   "devDependencies": {
     "prettier": "^3.8.3"

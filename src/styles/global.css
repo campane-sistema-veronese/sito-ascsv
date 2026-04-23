@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-primary-50: oklch(0.964 0.06 96.13);
+  --color-primary-100: oklch(0.919 0.169 99.94);
+  --color-primary-200: oklch(0.851 0.178 100.93);
+  --color-primary-300: oklch(0.773 0.161 101.05);
+  --color-primary-400: oklch(0.704 0.147 100.89);
+  --color-primary-500: oklch(0.628 0.131 101.17);
+  --color-primary-600: oklch(0.558 0.116 101.03);
+  --color-primary-700: oklch(0.482 0.1 100.76);
+  --color-primary-800: oklch(0.369 0.077 100.32);
+  --color-primary-900: oklch(0.25 0.052 101.26);
+  --color-primary-950: oklch(0.199 0.041 100.68);
+
+  --color-on-primary: #ffffff;
+
+  --font-sans:
+    'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --font-serif: 'Noto Serif', Georgia, 'Times New Roman', Times;
+}
