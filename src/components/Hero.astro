@@ -1,7 +1,8 @@
 ---
 const {
-  title = 'ASCSV — Associazione Suonatori di Campane',
-  subtitle = 'Custodi di una melodia antica',
+  strapLine = 'Associazione Suonatori di Campane a Sistema Veronese',
+  title = 'A.S.C.S.V.',
+  subtitle = 'Antichi suoni, nuove emozioni: cultura e tradizione nel territorio',
   ctaText = 'Scopri di più',
   ctaHref = '#about',
   image = '/images/MinerbeInterno.jpg',
@@ -9,12 +10,20 @@ const {
 } = Astro.props
 ---
 
-<section class="relative h-[60vh]" role="region" aria-label="Hero">
-  <img src={image} alt={imageAlt} class="absolute inset-0 w-full h-full object-cover" />
-  <div class="absolute inset-0 bg-black/50"></div>
-  <div class="relative z-10 max-w-4xl mx-auto text-center text-white py-20 px-6">
-    <h1 class="text-4xl md:text-6xl font-bold">{title}</h1>
-    <p class="mt-4 text-lg md:text-2xl">{subtitle}</p>
-    <a href={ctaHref} class="inline-block mt-8 bg-white text-black px-6 py-3 rounded-md">{ctaText}</a>
+<section class="relative h-screen flex items-center justify-center" role="region" aria-label="Hero">
+  <img src={image} alt={imageAlt} class="z-0 absolute inset-0 w-full h-full object-cover" />
+  <div class="absolute z-5 inset-0 bg-black/50"></div>
+  <div
+    class="relative z-10 max-w-4xl mx-auto text-center text-white py-20 px-6 flex flex-col items-center justify-center gap-4"
+  >
+    <p class="text-primary-300">{strapLine}</p>
+    <h1 class="font-serif text-4xl md:text-6xl font-bold">{title}</h1>
+    <p class="mt-4 font-serif">{subtitle}</p>
+    <a
+      href={ctaHref}
+      class="bg-primary-500 text-on-primary px-10 py-4 rounded-xl font-label-caps text-label-caps uppercase"
+    >
+      {ctaText}
+    </a>
   </div>
 </section>
