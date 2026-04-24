@@ -1,5 +1,6 @@
 ---
 import Hero from '../components/Hero.astro'
+import IndexSection from '../components/IndexSection.astro'
 import MainLayout from '../layouts/MainLayout.astro'
 import '../styles/global.css'
 ---
@@ -7,50 +8,41 @@ import '../styles/global.css'
 <MainLayout>
   <Hero image="/images/MinerbeInterno.jpg" />
 
-  <section id="about" class="max-w-4xl mx-auto p-8 grid md:grid-cols-2 gap-6 items-center">
-    <div>
-      <h2 class="text-2xl font-semibold">Chi siamo</h2>
-      <p class="mt-4 leading-relaxed">
-        L’Associazione Suonatori di Campane a Sistema Veronese è nata nel 1983, allo scopo di riunire e formare tutte le
-        persone che condividono questa passione e, allo stesso tempo, diffondere la cultura campanaria nel territorio.
-        Le nostre squadre prestano servizio di suono in un zona molto estesa, che spazia tra le province di Verona,
-        Vicenza, Padova, Brescia e Mantova. La famiglia di ASCSV ospita più di 2000 iscritti tra suonatori e
-        simpatizzanti, ed è la realtà più grande a livello italiano. Ogni anno organizza, in collaborazione con le
-        squadre, manifestazioni quali raduni, gare, rassegne, corsi di formazione e molto altro, cercando di formare una
-        comunità viva.
-      </p>
-    </div>
-    <div>
-      <img src="/images/VeronaRect.jpg" alt="Veduta di Verona" class="w-full rounded-lg object-cover h-64 md:h-112" />
-    </div>
-  </section>
+  <IndexSection
+    id="about"
+    title="Custodi di una melodia antica"
+    tagLine="L'Associazione"
+    imageSrc="/images/VeronaRect.jpg"
+    imageAlt="Veduta di Verona"
+  >
+    L'Associazione Suonatori di Campane a Sistema Veronese è nata nel 1983, allo scopo di riunire e formare tutte le
+    persone che condividono questa passione e, allo stesso tempo, diffondere la cultura campanaria nel territorio. Le
+    nostre squadre prestano servizio di suono in un zona molto estesa, che spazia tra le province di Verona, Vicenza,
+    Padova, Brescia e Mantova. La famiglia di ASCSV ospita più di 2000 iscritti tra suonatori e simpatizzanti, ed è la
+    realtà più grande a livello italiano. Ogni anno organizza, in collaborazione con le squadre, manifestazioni quali
+    raduni, gare, rassegne, corsi di formazione e molto altro, cercando di formare una comunità viva.
+  </IndexSection>
 
-  <section id="suono" class="max-w-6xl mx-auto p-8 grid md:grid-cols-2 gap-8 items-center">
-    <div>
-      <img
-        src="/images/Suonatori2.jpeg"
-        alt="Suonatori"
-        class="w-full rounded-lg shadow-lg object-cover h-64 md:h-144"
-      />
-    </div>
-    <div>
-      <h2 class="text-3xl font-bold">Il suono alla Veronese</h2>
-      <p class="mt-4 leading-relaxed">
-        Il suono alla veronese è nato nel XVIII secolo ed è il più recente a campane “giranti”. Esso permette di
-        eseguire veri e propri brani musicali, in cui ogni suonatore controlla una campana guidato da un sapiente
-        maestro.
-      </p>
-    </div>
-  </section>
+  <IndexSection
+    id="metodo"
+    title="Il sistema alla veronese"
+    tagLine="Il metodo"
+    imageSrc="/images/Suonatori2.jpeg"
+    imageAlt="Suonatori di campane"
+    imagePosition="left"
+  >
+    Il suono alla veronese è nato nel XVIII secolo ed è il più recente a campane “giranti”. Esso permette di eseguire
+    veri e propri brani musicali, in cui ogni suonatore controlla una campana guidato da un sapiente maestro.
+  </IndexSection>
 
-  <section id="unesco" class="max-w-4xl mx-auto p-8">
-    <h2 class="text-2xl font-semibold">Patrimonio UNESCO</h2>
-    <div class="mt-4 grid md:grid-cols-2 gap-6 items-center">
-      <p>
-        Dal 2024 il suono manuale delle campane a sistema veronese è stato riconosciuto come Patrimonio Immateriale
-        dell’Umanità dall’UNESCO, un traguardo importante che testimonia l’unicità e il valore di questa tradizione.
-      </p>
-      <img src="/images/Duomo.jpg" alt="Duomo" class="w-full rounded-lg object-cover h-48 md:h-56" />
-    </div>
-  </section>
+  <IndexSection
+    id="unesco"
+    title="Patrimonio dell'Umanità"
+    tagLine="UNESCO"
+    imageSrc="/images/Duomo.jpg"
+    imageAlt="Duomo di Verona"
+  >
+    Dal 2024 il suono manuale delle campane a sistema veronese è stato riconosciuto come Patrimonio Immateriale
+    dell’Umanità dall’UNESCO, un traguardo importante che testimonia l’unicità e il valore di questa tradizione.
+  </IndexSection>
 </MainLayout>
