@@ -1,7 +1,8 @@
 ---
+import ThemeToggle from './ThemeToggle.astro'
+
 interface Props {
   items?: { label: string; href: string }[]
-  logo?: string
   logoAlt?: string
 }
 
@@ -11,26 +12,33 @@ const {
     { label: 'Eventi', href: '#events' },
     { label: 'Contatti', href: '#contact' },
   ],
-  logo = '/images/ascsv_back.png',
   logoAlt = 'ASCSV logo',
 } = Astro.props
 ---
 
-<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm shadow-sm" role="banner">
-  <div class="max-w-6xl mx-auto p-4 md:p-6 flex items-center justify-between">
+<header
+  class="sticky top-0 z-50 bg-white/90 dark:bg-stone-900/90 backdrop-blur-sm shadow-sm dark:shadow-black/30"
+  role="banner"
+>
+  <div class="max-w-6xl mx-auto p-4 flex items-center justify-between">
     <a href="/" class="flex items-center gap-3">
-      <img src={logo} alt={logoAlt} class="h-8" />
+      <img src="/images/ascsv_back.png" alt={logoAlt} class="h-12 block dark:hidden" />
+      <img src="/images/ascsv_white.png" alt={logoAlt} class="h-12 hidden dark:block" />
     </a>
 
     <!-- Desktop navigation -->
-    <nav aria-label="Main navigation" class="hidden md:flex gap-6">
+    <nav aria-label="Main navigation" class="hidden md:flex items-center gap-6">
       {
         items.map((item) => (
-          <a href={item.href} class="text-sm">
+          <a
+            href={item.href}
+            class="text-sm text-stone-800 dark:text-stone-100 hover:underline font-medium hover:text-primary-500"
+          >
             {item.label}
           </a>
         ))
       }
+      <ThemeToggle id="desktop-theme-toggle" />
     </nav>
 
     <!-- Mobile navigation button -->
@@ -39,7 +47,7 @@ const {
         id="mobile-menu-button"
         aria-controls="mobile-menu"
         aria-expanded="false"
-        class="px-3 py-2 rounded-md bg-gray-100 flex items-center"
+        class="px-3 py-2 rounded-md bg-gray-100 dark:bg-stone-800 text-stone-800 dark:text-stone-100 flex items-center"
         aria-label="Apri menu"
       >
         <span class="material-symbols-outlined">menu</span>
@@ -57,27 +65,45 @@ const {
   </div>
 
   <aside
-    class="absolute top-0 right-0 h-full bg-white/90 w-3/4 max-w-xs p-6 shadow-lg transform translate-x-full transition-transform duration-200"
+    class="absolute flex flex-col top-0 right-0 h-full bg-white/90 dark:bg-stone-900 w-3/4 max-w-xs shadow-lg dark:shadow-black/40 transform translate-x-full transition-transform duration-200"
     role="dialog"
     aria-modal="true"
     aria-labelledby="mobile-menu-title"
   >
-    <div class="flex items-center justify-between mb-4">
-      <h2 id="mobile-menu-title" class="text-lg font-semibold">Menu</h2>
-      <button id="mobile-menu-close" class="p-2 rounded-md flex items-center" aria-label="Chiudi menu">
-        <span class="material-symbols-outlined">close</span>
-      </button>
+    <div class="flex items-center justify-between mb-4 mt-6 mx-6">
+      <h2 id="mobile-menu-title" class="text-lg font-semibold text-stone-900 dark:text-stone-100">ASCSV</h2>
+      <div class="flex items-center gap-4">
+        <ThemeToggle id="mobile-theme-toggle" />
+        <button
+          id="mobile-menu-close"
+          class="p-2 rounded-md flex items-center text-stone-900 dark:text-stone-100"
+          aria-label="Chiudi menu"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
     </div>
 
-    <nav class="flex flex-col gap-4" aria-label="Mobile navigation">
+    <hr class="text-gray-300 dark:text-stone-700 mb-4" />
+
+    <nav class="flex flex-col gap-4 mx-6 flex-1" aria-label="Mobile navigation">
       {
         items.map((item) => (
-          <a href={item.href} class="block text-base">
+          <a
+            href={item.href}
+            class="block text-base font-serif text-stone-900 dark:text-stone-100 hover:text-primary-500"
+          >
             {item.label}
           </a>
         ))
       }
     </nav>
+
+    <hr class="text-gray-300 dark:text-stone-700 my-4" />
+
+    <p class="text-xs font-serif text-gray-500 dark:text-stone-400 mx-6 mb-6">
+      © 2026 ASCSV. Tutti i diritti riservati.
+    </p>
   </aside>
 </div>
 

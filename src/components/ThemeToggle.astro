@@ -1,0 +1,60 @@
+---
+interface Props {
+  id: string
+}
+const { id } = Astro.props
+---
+
+<button
+  id={id}
+  class="p-2 rounded-md flex items-center hover:text-primary-500 cursor-pointer text-gray-700 dark:text-gray-100"
+  aria-label="Cambia tema"
+  aria-pressed="false"
+>
+  <span class="material-symbols-outlined hidden! dark:inline!">light_mode</span>
+  <span class="material-symbols-outlined inline! dark:hidden!">dark_mode</span>
+</button>
+
+<script is:inline define:vars={{ id }}>
+  ;(function () {
+    const THEME_KEY = 'theme'
+    const btn = document.getElementById(id)
+
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark')
+        document.documentElement.classList.remove('light')
+        btn?.setAttribute('aria-pressed', 'true')
+      } else {
+        document.documentElement.classList.remove('dark')
+        document.documentElement.classList.add('light')
+        btn?.setAttribute('aria-pressed', 'false')
+      }
+      try {
+        localStorage.setItem(THEME_KEY, theme)
+      } catch (e) {}
+    }
+
+    const stored = (function () {
+      try {
+        return localStorage.getItem(THEME_KEY)
+      } catch (e) {
+        return null
+      }
+    })()
+
+    if (
+      stored === 'dark' ||
+      (stored === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      setTheme('dark')
+    } else {
+      setTheme('light')
+    }
+
+    btn?.addEventListener('click', () => {
+      const currentlyDark = document.documentElement.classList.contains('dark')
+      setTheme(currentlyDark ? 'light' : 'dark')
+    })
+  })()
+</script>

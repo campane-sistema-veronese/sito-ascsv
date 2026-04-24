@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
+import MainLayout from '../layouts/MainLayout.astro'
 import '../styles/global.css'
 
 const CATEGORY_ORDER = [
@@ -30,42 +31,33 @@ const formatDate = (date: Date) =>
   })
 ---
 
-<html lang="it">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Archivio documenti | ASCSV</title>
-  </head>
-  <body>
-    <main>
-      <h1>Archivio documenti</h1>
-      <p class="intro">Documenti PDF organizzati per categoria.</p>
+<MainLayout>
+  <h1>Archivio documenti</h1>
+  <p class="intro">Documenti PDF organizzati per categoria.</p>
 
-      {
-        groupedByCategory.length === 0 ? (
-          <p>Nessun documento disponibile.</p>
-        ) : (
-          groupedByCategory.map((group, index) => (
-            <details open={index === 0}>
-              <summary>
-                {group.category} ({group.docs.length})
-              </summary>
-              <ul>
-                {group.docs.map((doc) => (
-                  <li>
-                    <span class="doc-title">{doc.data.title}</span>
-                    <p class="meta">{formatDate(doc.data.date)}</p>
-                    <p>{doc.data.description}</p>
-                    <a href={doc.data.file} download>
-                      Scarica PDF
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </details>
-          ))
-        )
-      }
-    </main>
-  </body>
-</html>
+  {
+    groupedByCategory.length === 0 ? (
+      <p>Nessun documento disponibile.</p>
+    ) : (
+      groupedByCategory.map((group, index) => (
+        <details open={index === 0}>
+          <summary>
+            {group.category} ({group.docs.length})
+          </summary>
+          <ul>
+            {group.docs.map((doc) => (
+              <li>
+                <span class="doc-title">{doc.data.title}</span>
+                <p class="meta">{formatDate(doc.data.date)}</p>
+                <p>{doc.data.description}</p>
+                <a href={doc.data.file} download>
+                  Scarica PDF
+                </a>
+              </li>
+            ))}
+          </ul>
+        </details>
+      ))
+    )
+  }
+</MainLayout>
