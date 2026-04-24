@@ -18,7 +18,13 @@ import '../styles/global.css'
       class="sr-only focus:absolute focus:top-4 focus:left-4 focus:bg-white focus:text-black focus:px-3 focus:py-2"
       >Vai al contenuto</a
     >
-    <Header />
+    <Header
+      items={[
+        { label: 'Chi siamo', href: '#about' },
+        { label: 'Eventi', href: '#events' },
+        { label: 'Contatti', href: '#contact' },
+      ]}
+    />
 
     <main id="main">
       <Hero image="/images/MinerbeInterno.jpg" />
@@ -71,20 +77,6 @@ import '../styles/global.css'
             dell’Umanità dall’UNESCO, un traguardo importante che testimonia l’unicità e il valore di questa tradizione.
           </p>
           <img src="/images/Duomo.jpg" alt="Duomo" class="w-full rounded-lg object-cover h-48 md:h-56" />
-        </div>
-      </section>
-
-      <section id="gallery" class="max-w-6xl mx-auto p-8">
-        <h2 class="text-2xl font-semibold mb-4">Galleria</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <img src="/images/CampanileMobileGiorno.jpg" alt="Campanile" class="w-full h-40 object-cover rounded-md" />
-          <img src="/images/MinerbeInterno.jpg" alt="Interno Minerbe" class="w-full h-40 object-cover rounded-md" />
-          <img src="/images/Verona.jpg" alt="Verona" class="w-full h-40 object-cover rounded-md" />
-          <img
-            src="/images/VeronaRect.jpg"
-            alt="Vista rettangolare Verona"
-            class="w-full h-40 object-cover rounded-md"
-          />
         </div>
       </section>
     </main>

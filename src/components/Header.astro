@@ -1,22 +1,84 @@
 ---
+interface Props {
+  items?: { label: string; href: string }[]
+  logo?: string
+  logoAlt?: string
+}
 
+const {
+  items = [
+    { label: 'Chi siamo', href: '#about' },
+    { label: 'Eventi', href: '#events' },
+    { label: 'Contatti', href: '#contact' },
+  ],
+  logo = '/images/ascsv_back.png',
+  logoAlt = 'ASCSV logo',
+} = Astro.props
 ---
 
-<header role="banner" class="max-w-6xl mx-auto p-6 flex items-center justify-between">
-  <a href="/" class="flex items-center gap-3">
-    <img src="/images/cropped-ascsv_white.png" alt="ASCSV logo" class="h-12" />
-  </a>
-  <nav aria-label="Main navigation" class="hidden md:flex gap-6">
-    <a href="#about" class="text-sm">Chi siamo</a>
-    <a href="#events" class="text-sm">Eventi</a>
-    <a href="#contact" class="text-sm">Contatti</a>
-  </nav>
-  <details class="md:hidden">
-    <summary class="px-3 py-2 rounded-md bg-gray-100">Menu</summary>
-    <div class="mt-2 flex flex-col gap-2 p-2">
-      <a href="#about" class="block">Chi siamo</a>
-      <a href="#events" class="block">Eventi</a>
-      <a href="#contact" class="block">Contatti</a>
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm shadow-sm" role="banner">
+  <div class="max-w-6xl mx-auto p-4 md:p-6 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3">
+      <img src={logo} alt={logoAlt} class="h-8" />
+    </a>
+
+    <!-- Desktop navigation -->
+    <nav aria-label="Main navigation" class="hidden md:flex gap-6">
+      {
+        items.map((item) => (
+          <a href={item.href} class="text-sm">
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <!-- Mobile navigation button -->
+    <div class="md:hidden">
+      <button
+        id="mobile-menu-button"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        class="px-3 py-2 rounded-md bg-gray-100 flex items-center"
+        aria-label="Apri menu"
+      >
+        <span class="material-symbols-outlined">menu</span>
+      </button>
     </div>
-  </details>
+  </div>
 </header>
+
+<!-- Mobile drawer (moved outside header so overlay covers viewport) -->
+<div id="mobile-menu" class="fixed inset-0 z-9999 hidden" aria-hidden="true">
+  <div
+    class="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-200 pointer-events-none"
+    data-menu-overlay
+  >
+  </div>
+
+  <aside
+    class="absolute top-0 right-0 h-full bg-white/90 w-3/4 max-w-xs p-6 shadow-lg transform translate-x-full transition-transform duration-200"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mobile-menu-title"
+  >
+    <div class="flex items-center justify-between mb-4">
+      <h2 id="mobile-menu-title" class="text-lg font-semibold">Menu</h2>
+      <button id="mobile-menu-close" class="p-2 rounded-md flex items-center" aria-label="Chiudi menu">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <nav class="flex flex-col gap-4" aria-label="Mobile navigation">
+      {
+        items.map((item) => (
+          <a href={item.href} class="block text-base">
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+  </aside>
+</div>
+
+<script src="../scripts/mobile-drawer.ts"></script>
