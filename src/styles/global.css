@@ -31,3 +31,12 @@
     'GRAD' 0,
     'opsz' 20;
 }
+
+:root {
+  --header-height: 64px;
+}
+
+section[id] {
+  scroll-margin-top: var(--header-height);
+  -webkit-scroll-margin-top: var(--header-height);
+}

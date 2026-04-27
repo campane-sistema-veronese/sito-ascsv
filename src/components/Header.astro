@@ -108,3 +108,23 @@ const {
 </div>
 
 <script src="../scripts/mobile-drawer.ts"></script>
+<script type="module">
+  ;(function () {
+    function setHeaderHeight() {
+      const header = document.querySelector('header[role="banner"]')
+      if (!header) return
+      const h = header.getBoundingClientRect().height
+      document.documentElement.style.setProperty('--header-height', h + 'px')
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setHeaderHeight)
+    } else {
+      setHeaderHeight()
+    }
+    window.addEventListener('resize', setHeaderHeight)
+    const headerEl = document.querySelector('header[role="banner"]')
+    if (headerEl && typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(setHeaderHeight).observe(headerEl)
+    }
+  })()
+</script>
