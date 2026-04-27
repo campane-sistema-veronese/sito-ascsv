@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content'
+import { ARCHIVE_CATEGORY_META } from '../../constants/archive-categories'
+import MainLayout from '../../layouts/MainLayout.astro'
+import '../../styles/global.css'
+
+const collection = await getCollection('documents')
+
+const categoryCards = ARCHIVE_CATEGORY_META.map((item) => {
+  const count = collection.filter((doc) => doc.data.category === item.label).length
+  return {
+    ...item,
+    count,
+  }
+}).filter((item) => item.count > 0)
+---
+
+<MainLayout>
+  <section class="mx-auto w-full max-w-6xl px-4 py-10 md:px-6 md:py-14">
+    <div
+      class="rounded-2xl border border-stone-200 bg-linear-to-r from-primary-50 via-stone-50 to-white p-6 md:p-8 dark:border-stone-800 dark:from-primary-950/30 dark:via-stone-950 dark:to-stone-900"
+    >
+      <p class="text-xs uppercase tracking-[0.18em] text-primary-700 dark:text-primary-300">Archivio ASCSV</p>
+      <h1 class="mt-3 text-3xl font-serif md:text-5xl">Scegli una categoria</h1>
+      <p class="mt-3 max-w-3xl text-sm text-stone-700 md:text-base dark:text-stone-200">
+        Questa sezione raccoglie i documenti ufficiali dell'associazione. Entra nella categoria che ti interessa per
+        consultare e scaricare i PDF disponibili.
+      </p>
+    </div>
+
+    {
+      categoryCards.length === 0 ? (
+        <p class="mt-8 rounded-lg border border-stone-200 bg-white p-6 text-stone-700 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-200">
+          Nessun documento disponibile.
+        </p>
+      ) : (
+        <ul class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {categoryCards.map((item) => (
+            <li>
+              <a
+                href={`/archivio/${item.slug}`}
+                class="group block h-full rounded-xl border border-stone-200 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-sm dark:border-stone-800 dark:bg-stone-900 dark:hover:border-primary-800"
+              >
+                <div class="flex items-center justify-between gap-3">
+                  <span class="material-symbols-outlined text-2xl text-primary-600 dark:text-primary-300">
+                    {item.icon}
+                  </span>
+                  <span class="text-xs uppercase tracking-wide text-stone-500 dark:text-stone-400">
+                    {item.count} {item.count === 1 ? 'doc' : 'doc'}
+                  </span>
+                </div>
+
+                <p class="mt-4 text-xl font-serif text-stone-900 dark:text-stone-100">{item.label}</p>
+                <p class="mt-2 text-sm leading-relaxed text-stone-600 dark:text-stone-300">{item.description}</p>
+
+                <p class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary-700 group-hover:text-primary-800 dark:text-primary-300 dark:group-hover:text-primary-200">
+                  Apri categoria
+                  <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                </p>
+
+                <p class="mt-1 text-xs text-stone-500 dark:text-stone-400">
+                  {item.count} {item.count === 1 ? 'documento' : 'documenti'}
+                </p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</MainLayout>

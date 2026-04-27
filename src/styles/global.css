@@ -40,3 +40,12 @@ section[id] {
   scroll-margin-top: var(--header-height);
   -webkit-scroll-margin-top: var(--header-height);
 }
+
+.archive-chip-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.archive-chip-scroll::-webkit-scrollbar {
+  display: none;
+}
