@@ -1,4 +1,6 @@
 ---
+import Button from './Button.astro'
+
 const {
   tagLine = 'Associazione Suonatori di Campane a Sistema Veronese',
   title = 'A.S.C.S.V.',
@@ -21,11 +23,6 @@ const {
       <h1 class="font-serif text-6xl md:text-8xl mt-8 font-bolder">{title}</h1>
     </hgroup>
     <p class="mt-4 font-serif">{subtitle}</p>
-    <a
-      href={ctaHref}
-      class="bg-primary-500 mt-4 text-on-primary px-10 py-4 rounded-xl font-label-caps text-label-caps uppercase"
-    >
-      {ctaText}
-    </a>
+    <Button title={ctaText} href={ctaHref} size="lg" class="mt-4" />
   </div>
 </section>

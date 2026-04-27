@@ -5,6 +5,7 @@ import {
   ARCHIVE_CATEGORY_META,
   ARCHIVE_CATEGORY_SLUGS,
 } from '../../constants/archive-categories'
+import Button from '../../components/Button.astro'
 import MainLayout from '../../layouts/MainLayout.astro'
 import '../../styles/global.css'
 
@@ -47,13 +48,7 @@ const formatDate = (date: Date) =>
 
 <MainLayout>
   <section class="mx-auto w-full max-w-7xl px-4 py-10 md:px-6 md:py-12">
-    <a
-      href="/archivio"
-      class="inline-flex items-center gap-1 text-sm font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
-    >
-      <span class="material-symbols-outlined text-base">arrow_back</span>
-      Torna alle categorie
-    </a>
+    <Button title="Torna alle categorie" href="/archivio" variant="text" icon="arrow_back" size="md" />
 
     <div class="mt-6 grid gap-8 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-10">
       <aside class="hidden lg:block">
@@ -104,7 +99,7 @@ const formatDate = (date: Date) =>
                     class:list={[
                       'inline-flex items-center gap-1 rounded-full border px-3 py-2 text-xs font-medium uppercase tracking-wide transition-colors',
                       isActive
-                        ? 'border-primary-400 bg-primary-100 text-primary-900 dark:border-primary-600 dark:bg-primary-900/40 dark:text-primary-100'
+                        ? 'border-primary-400 bg-primary-50 text-primary-900 dark:border-primary-600 dark:bg-primary-900/40 dark:text-primary-100'
                         : 'border-stone-300 bg-white text-stone-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200',
                     ]}
                   >
@@ -120,19 +115,13 @@ const formatDate = (date: Date) =>
         <header
           class="mt-4 rounded-2xl border border-stone-200 bg-white p-5 md:p-7 dark:border-stone-800 dark:bg-stone-900"
         >
-          <p class="text-xs uppercase tracking-[0.16em] text-primary-700 dark:text-primary-300">Categoria</p>
+          <p class="text-xs uppercase text-primary-700 dark:text-primary-300">Categoria</p>
           <h1 class="mt-2 text-3xl font-serif md:text-4xl">{categoryLabel}</h1>
-          <p class="mt-2 max-w-3xl text-sm text-stone-700 md:text-base dark:text-stone-200">
+          <p class="mt-2 mb-6 max-w-3xl text-sm text-stone-700 md:text-base dark:text-stone-200">
             {currentCategoryMeta?.description ?? 'Documenti disponibili in questa categoria.'}
           </p>
-          <p class="mt-3 text-xs uppercase tracking-wide text-stone-500 dark:text-stone-400">
-            {documents.length}
-            {documents.length === 1 ? 'documento disponibile' : 'documenti disponibili'}
-          </p>
-        </header>
 
-        <div class="mt-4 rounded-xl border border-stone-200 bg-white p-4 dark:border-stone-800 dark:bg-stone-900">
-          <label for="archive-search" class="text-xs uppercase tracking-[0.16em] text-stone-500 dark:text-stone-400">
+          <label for="archive-search" class="text-xs uppercase text-stone-500 dark:text-stone-400">
             Cerca nella categoria corrente
           </label>
           <div class="relative mt-2">
@@ -149,7 +138,7 @@ const formatDate = (date: Date) =>
               class="w-full rounded-lg border border-stone-300 bg-white py-2.5 pr-3 pl-10 text-sm text-stone-900 focus:border-primary-500 focus:outline-none dark:border-stone-700 dark:bg-stone-950 dark:text-stone-100"
             />
           </div>
-        </div>
+        </header>
 
         {
           documents.length === 0 ? (
@@ -157,34 +146,17 @@ const formatDate = (date: Date) =>
               Nessun documento disponibile in questa categoria.
             </p>
           ) : (
-            <ul id="archive-list" class="mt-6 space-y-4">
+            <ul
+              id="archive-list"
+              class="mt-6 divide-y divide-stone-200 bg-white border border-stone-200 dark:divide-stone-700 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-200 rounded-lg overflow-hidden"
+            >
               {documents.map((doc) => (
-                <li
-                  class="archive-item rounded-xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-900"
-                  data-search-index={`${doc.data.title} ${doc.data.description}`.toLowerCase()}
-                >
-                  <div class="flex items-start justify-between gap-4">
-                    <div>
-                      <h2 class="text-lg font-serif text-stone-900 dark:text-stone-100">{doc.data.title}</h2>
-                      <p class="mt-1 text-xs uppercase tracking-wide text-stone-500 dark:text-stone-400">
-                        {formatDate(doc.data.date)}
-                      </p>
-                    </div>
-                    <span class="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2 py-1 text-[11px] font-medium tracking-wide text-stone-600 dark:bg-stone-800 dark:text-stone-300">
-                      <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
-                      PDF
+                <li class="archive-item" data-search-index={`${doc.data.title} ${doc.data.description}`.toLowerCase()}>
+                  <a href={doc.data.file} download class="flex items-center justify-between gap-4 py-4 px-6">
+                    <h2 class="text-lg font-serif text-stone-900 dark:text-stone-100">{doc.data.title}</h2>
+                    <span class="material-symbols-outlined text-stone-500" data-icon="chevron_right">
+                      chevron_right
                     </span>
-                  </div>
-
-                  <p class="mt-3 text-sm leading-relaxed text-stone-700 dark:text-stone-200">{doc.data.description}</p>
-                  <a
-                    href={doc.data.file}
-                    download
-                    class="mt-4 inline-flex items-center gap-1 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700"
-                    aria-label={`Scarica PDF: ${doc.data.title}`}
-                  >
-                    Scarica PDF
-                    <span class="material-symbols-outlined text-base">download</span>
                   </a>
                 </li>
               ))}

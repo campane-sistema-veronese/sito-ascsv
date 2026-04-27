@@ -1,7 +1,63 @@
 ---
-const { title } = Astro.props
+interface Props {
+  title: string
+  href?: string
+  size?: 'sm' | 'md' | 'lg'
+  icon?: string
+  iconPosition?: 'left' | 'right'
+  variant?: 'box' | 'text'
+  type?: 'button' | 'submit' | 'reset'
+  ariaLabel?: string
+  class?: string
+  download?: boolean | string
+  target?: string
+  rel?: string
+}
+
+const {
+  title,
+  href,
+  size = 'md',
+  icon,
+  iconPosition = 'left',
+  variant = 'box',
+  type = 'button',
+  ariaLabel,
+  class: className = '',
+  download,
+  target,
+  rel,
+} = Astro.props as Props
+
+const baseClasses =
+  'inline-flex items-center justify-center gap-1.5 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950'
+
+const sizeClasses = {
+  sm: variant === 'box' ? 'rounded-lg px-3 py-1.5 text-xs' : 'text-xs',
+  md: variant === 'box' ? 'rounded-lg px-4 py-2 text-sm' : 'text-sm',
+  lg: variant === 'box' ? 'rounded-xl px-10 py-4 text-sm uppercase tracking-widest' : 'text-base',
+}[size]
+
+const variantClasses =
+  variant === 'text'
+    ? 'text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200'
+    : 'bg-primary-600 text-on-primary hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-400'
+
+const classes = `${baseClasses} ${sizeClasses} ${variantClasses} ${className}`
 ---
 
-<button class="bg-primary-500 text-on-primary px-10 py-4 rounded font-label-caps text-label-caps uppercase">
-  {title}
-</button>
+{
+  href ? (
+    <a href={href} class={classes} aria-label={ariaLabel} download={download} target={target} rel={rel}>
+      {icon && iconPosition === 'left' && <span class="material-symbols-outlined text-[1.1em]">{icon}</span>}
+      <span>{title}</span>
+      {icon && iconPosition === 'right' && <span class="material-symbols-outlined text-[1.1em]">{icon}</span>}
+    </a>
+  ) : (
+    <button type={type} class={classes} aria-label={ariaLabel}>
+      {icon && iconPosition === 'left' && <span class="material-symbols-outlined text-[1.1em]">{icon}</span>}
+      <span>{title}</span>
+      {icon && iconPosition === 'right' && <span class="material-symbols-outlined text-[1.1em]">{icon}</span>}
+    </button>
+  )
+}
