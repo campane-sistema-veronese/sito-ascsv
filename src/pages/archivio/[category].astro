@@ -1,49 +1,39 @@
 ---
 import { getCollection } from 'astro:content'
-import {
-  ARCHIVE_CATEGORY_BY_SLUG,
-  ARCHIVE_CATEGORY_META,
-  ARCHIVE_CATEGORY_SLUGS,
-} from '../../constants/archive-categories'
+import { archiveCategories, archiveCategorySlugs, type CategorySlug } from '../../constants/archive-categories'
 import Button from '../../components/Button.astro'
 import MainLayout from '../../layouts/MainLayout.astro'
 import '../../styles/global.css'
 
 export const getStaticPaths = () =>
-  ARCHIVE_CATEGORY_SLUGS.map((item) => ({
-    params: { category: item.slug },
-    props: { categoryLabel: item.label },
+  archiveCategorySlugs.map((slug) => ({
+    params: { category: slug },
+    props: { categoryLabel: archiveCategories[slug].label },
   }))
 
-interface Props {
-  categoryLabel: (typeof ARCHIVE_CATEGORY_SLUGS)[number]['label']
+export interface Params {
+  category: CategorySlug
 }
 
-const { category: categorySlug } = Astro.params
-const { categoryLabel } = Astro.props as Props
+const { category: selectedCategorySlug } = Astro.params
 
-if (!categorySlug || !(categorySlug in ARCHIVE_CATEGORY_BY_SLUG)) {
+if (!selectedCategorySlug || !(selectedCategorySlug in archiveCategories)) {
   return Astro.redirect('/archivio')
 }
 
 const allDocuments = await getCollection('documents')
 const documents = allDocuments
-  .filter((doc) => doc.data.category === categoryLabel)
+  .filter((doc) => doc.data.category === selectedCategorySlug)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 
-const categoriesWithCount = ARCHIVE_CATEGORY_META.map((item) => ({
-  ...item,
-  count: allDocuments.filter((doc) => doc.data.category === item.label).length,
-})).filter((item) => item.count > 0)
+const categoriesWithCount = Object.values(archiveCategories)
+  .map((item) => ({
+    ...item,
+    count: allDocuments.filter((doc) => doc.data.category === item.slug).length,
+  }))
+  .filter((item) => item.count > 0)
 
-const currentCategoryMeta = categoriesWithCount.find((item) => item.slug === categorySlug)
-
-const formatDate = (date: Date) =>
-  date.toLocaleDateString('it-IT', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  })
+const currentCategoryMeta = categoriesWithCount.find((item) => item.slug === selectedCategorySlug)
 ---
 
 <MainLayout>
@@ -59,7 +49,7 @@ const formatDate = (date: Date) =>
           <nav aria-label="Categorie archivio" class="space-y-1">
             {
               categoriesWithCount.map((item) => {
-                const isActive = item.slug === categorySlug
+                const isActive = item.slug === selectedCategorySlug
 
                 return (
                   <a
@@ -90,7 +80,7 @@ const formatDate = (date: Date) =>
           <nav aria-label="Categorie archivio mobile" class="flex w-max gap-2 pb-1">
             {
               categoriesWithCount.map((item) => {
-                const isActive = item.slug === categorySlug
+                const isActive = item.slug === selectedCategorySlug
 
                 return (
                   <a
@@ -116,7 +106,7 @@ const formatDate = (date: Date) =>
           class="mt-4 rounded-2xl border border-stone-200 bg-white p-5 md:p-7 dark:border-stone-800 dark:bg-stone-900"
         >
           <p class="text-xs uppercase text-primary-700 dark:text-primary-300">Categoria</p>
-          <h1 class="mt-2 text-3xl font-serif md:text-4xl">{categoryLabel}</h1>
+          <h1 class="mt-2 text-3xl font-serif md:text-4xl">{currentCategoryMeta?.label}</h1>
           <p class="mt-2 mb-6 max-w-3xl text-sm text-stone-700 md:text-base dark:text-stone-200">
             {currentCategoryMeta?.description ?? 'Documenti disponibili in questa categoria.'}
           </p>

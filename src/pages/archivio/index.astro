@@ -1,18 +1,22 @@
 ---
 import { getCollection } from 'astro:content'
-import { ARCHIVE_CATEGORY_META } from '../../constants/archive-categories'
+import { archiveCategories, archiveCategorySlugs } from '../../constants/archive-categories'
 import MainLayout from '../../layouts/MainLayout.astro'
 import '../../styles/global.css'
 
 const collection = await getCollection('documents')
 
-const categoryCards = ARCHIVE_CATEGORY_META.map((item) => {
-  const count = collection.filter((doc) => doc.data.category === item.label).length
-  return {
-    ...item,
-    count,
-  }
-}).filter((item) => item.count > 0)
+console.log('collection', collection)
+
+const categoryCards = archiveCategorySlugs
+  .map((item) => {
+    const count = collection.filter((doc) => doc.data.category === item).length
+    return {
+      ...archiveCategories[item],
+      count,
+    }
+  })
+  .filter((item) => item.count > 0)
 ---
 
 <MainLayout>
@@ -46,7 +50,7 @@ const categoryCards = ARCHIVE_CATEGORY_META.map((item) => {
                     {item.icon}
                   </span>
                   <span class="text-xs uppercase tracking-wide text-stone-500 dark:text-stone-400">
-                    {item.count} {item.count === 1 ? 'doc' : 'doc'}
+                    {item.count} {item.count === 1 ? 'documento' : 'documenti'}
                   </span>
                 </div>
 
@@ -56,10 +60,6 @@ const categoryCards = ARCHIVE_CATEGORY_META.map((item) => {
                 <p class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary-700 group-hover:text-primary-800 dark:text-primary-300 dark:group-hover:text-primary-200">
                   Apri categoria
                   <span class="material-symbols-outlined text-lg">arrow_forward</span>
-                </p>
-
-                <p class="mt-1 text-xs text-stone-500 dark:text-stone-400">
-                  {item.count} {item.count === 1 ? 'documento' : 'documenti'}
                 </p>
               </a>
             </li>

@@ -1,7 +1,7 @@
 import { glob } from 'astro/loaders'
 import { z } from 'astro/zod'
 import { defineCollection } from 'astro:content'
-import { ARCHIVE_CATEGORIES } from './constants/archive-categories'
+import { archiveCategorySlugs } from './constants/archive-categories'
 
 const documents = defineCollection({
   loader: glob({
@@ -13,7 +13,7 @@ const documents = defineCollection({
     slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     description: z.string().optional(),
     date: z.coerce.date(),
-    category: z.enum(ARCHIVE_CATEGORIES),
+    category: z.enum(archiveCategorySlugs),
     file: z.string().regex(/^\/docs\/.+\.pdf$/),
   }),
 })

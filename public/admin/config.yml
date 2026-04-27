@@ -31,15 +31,15 @@ collections:
           widget: select,
           options:
             [
-              'Modulistica gare',
-              'Itinerari',
-              'Storia e cultura',
-              'Gare a 5 campane',
-              'Gare a 6 campane',
-              'Gare a 8 campane',
-              'Gare a 9 campane',
-              'Altre gare',
-              'Suonate classiche',
+              'censimento-campanario',
+              'storia-cultura',
+              'itinerari',
+              'modulistica-gare',
+              'suonate-classiche',
+              'gare-5-campane',
+              'gare-6-campane',
+              'gare-9-campane',
+              'altre-gare',
             ],
         }
       - { label: File PDF, name: file, widget: file }

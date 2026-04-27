@@ -6,14 +6,7 @@ interface Props {
   logoAlt?: string
 }
 
-const {
-  items = [
-    { label: 'Chi siamo', href: '#about' },
-    { label: 'Eventi', href: '#events' },
-    { label: 'Contatti', href: '#contact' },
-  ],
-  logoAlt = 'ASCSV logo',
-} = Astro.props
+const { items = [], logoAlt = 'ASCSV logo' } = Astro.props
 ---
 
 <header
