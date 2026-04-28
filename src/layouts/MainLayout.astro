@@ -1,6 +1,7 @@
 ---
 import Header from '../components/Header.astro'
 import ThemeInit from '../components/ThemeInit.astro'
+import { urlFor } from '../scripts/utils'
 import '../styles/global.css'
 ---
 
@@ -8,7 +9,7 @@ import '../styles/global.css'
   <head>
     <ThemeInit />
     <meta charset="utf-8" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href={urlFor('favicon.ico')} />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>ASCSV - Associazione Suonatori di Campane a Sistema Veronese</title>

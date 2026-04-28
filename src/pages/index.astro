@@ -2,6 +2,7 @@
 import Hero from '../components/Hero.astro'
 import IndexSection from '../components/IndexSection.astro'
 import MainLayout from '../layouts/MainLayout.astro'
+import { urlFor } from '../scripts/utils'
 import '../styles/global.css'
 ---
 
@@ -12,7 +13,7 @@ import '../styles/global.css'
     id="about"
     title="Custodi di una melodia antica"
     tagLine="L'Associazione"
-    imageSrc="/images/VeronaRect.jpg"
+    imageSrc={urlFor('images/VeronaRect.jpg')}
     imageAlt="Veduta di Verona"
   >
     L'Associazione Suonatori di Campane a Sistema Veronese è nata nel 1983, allo scopo di riunire e formare tutte le
@@ -41,7 +42,7 @@ import '../styles/global.css'
     id="metodo"
     title="Il sistema alla veronese"
     tagLine="Il metodo"
-    imageSrc="/images/Suonatori2.jpeg"
+    imageSrc={urlFor('images/Suonatori2.jpeg')}
     imageAlt="Suonatori di campane"
     imagePosition="left"
   >
@@ -55,7 +56,7 @@ import '../styles/global.css'
     id="unesco"
     title="Patrimonio dell'Umanità"
     tagLine="UNESCO"
-    imageSrc="/images/Duomo.jpg"
+    imageSrc={urlFor('images/Duomo.jpg')}
     imageAlt="Duomo di Verona"
   >
     Dal 2024 il suono manuale delle campane a sistema veronese è stato riconosciuto come Patrimonio Immateriale
