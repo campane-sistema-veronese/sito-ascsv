@@ -75,8 +75,9 @@ const currentCategoryMeta = categoriesWithCount.find((item) => item.slug === sel
         </div>
       </aside>
 
+      <!-- TODO: handle overflow on mobile -->
       <div>
-        <div class="overflow-x-auto archive-chip-scroll lg:hidden">
+        <div class="overflow-x-auto archive-chip-scroll lg:hidden mb-4">
           <nav aria-label="Categorie archivio mobile" class="flex w-max gap-2 pb-1">
             {
               categoriesWithCount.map((item) => {
@@ -102,9 +103,7 @@ const currentCategoryMeta = categoriesWithCount.find((item) => item.slug === sel
           </nav>
         </div>
 
-        <header
-          class="mt-4 rounded-2xl border border-stone-200 bg-white p-5 md:p-7 dark:border-stone-800 dark:bg-stone-900"
-        >
+        <header class="rounded-2xl border border-stone-200 bg-white p-5 md:p-7 dark:border-stone-800 dark:bg-stone-900">
           <p class="text-xs uppercase text-primary-700 dark:text-primary-300">Categoria</p>
           <h1 class="mt-2 text-3xl font-serif md:text-4xl">{currentCategoryMeta?.label}</h1>
           <p class="mt-2 mb-6 max-w-3xl text-sm text-stone-700 md:text-base dark:text-stone-200">

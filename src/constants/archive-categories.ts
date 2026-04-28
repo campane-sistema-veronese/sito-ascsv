@@ -23,7 +23,7 @@ export const archiveCategories: Record<CategorySlug, Category> = {
   'censimento-campanario': {
     slug: 'censimento-campanario',
     label: 'Censimento campanario',
-    icon: '',
+    icon: 'map',
     description:
       'Censimento dei campanili a sistema veronese, con informazioni sulle campane e sullo stato del concerto.',
   },
