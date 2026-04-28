@@ -1,0 +1,10 @@
+---
+title: 'S. Zeno Colognola 2010 Sper.Giov. 25'
+slug: 's-zeno-colognola-2010-sper-giov-25'
+description: 'Partiture delle gare a 5 campane.'
+date: '2026-04-28'
+category: 'gare-5-campane'
+file: '/docs/S. Zeno Colognola 2010_sper.giov.-25.pdf'
+---
+
+S. Zeno Colognola 2010 Sper.Giov. 25
