@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "censimento-campanario",
+    "label": "Censimento campanario",
+    "description": "Censimento dei campanili a sistema veronese, con informazioni sulle campane e sullo stato del concerto."
+  },
+  {
+    "slug": "storia-cultura",
+    "label": "Storia e cultura",
+    "description": "Materiali divulgativi e testi dedicati alla tradizione campanaria."
+  },
+  {
+    "slug": "itinerari",
+    "label": "Itinerari",
+    "description": "Raccolta dei volumi \"Itinerari\" pubblicati annualmente."
+  },
+  {
+    "slug": "modulistica-gare",
+    "label": "Modulistica gare",
+    "description": "Regolamenti, schede iscrizione e documenti organizzativi delle gare."
+  },
+  {
+    "slug": "suonate-classiche",
+    "label": "Suonate classiche",
+    "description": "Partiture e repertori della tradizione del suono a sistema veronese."
+  },
+  {
+    "slug": "gare-5-campane",
+    "label": "Gare a 5 campane",
+    "description": "Partiture delle gare a 5 campane."
+  },
+  {
+    "slug": "gare-6-campane",
+    "label": "Gare a 6 campane",
+    "description": "Partiture delle gare a 6 campane."
+  },
+  {
+    "slug": "gare-9-campane",
+    "label": "Gare a 9 campane",
+    "description": "Partiture delle gare a 9 campane."
+  },
+  {
+    "slug": "altre-gare",
+    "label": "Altre gare",
+    "description": "Partiture di altre gare."
+  }
+]

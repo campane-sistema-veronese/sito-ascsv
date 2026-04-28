@@ -16,5 +16,6 @@
   "color-highlight.matchRgbWithNoFunction": true,
   "workbench.colorCustomizations": {
     "statusBar.background": "#5a541f"
-  }
+  },
+  "autopep8.args": ["--max-line-length", "119"]
 }
