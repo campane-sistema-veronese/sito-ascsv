@@ -142,7 +142,7 @@ const currentCategoryMeta = categoriesWithCount.find((item) => item.slug === sel
             >
               {documents.map((doc) => (
                 <li class="archive-item" data-search-index={`${doc.data.title} ${doc.data.description}`.toLowerCase()}>
-                  <a href={doc.data.file} download class="flex items-center justify-between gap-4 py-4 px-6">
+                  <a href={urlFor(doc.data.file)} download class="flex items-center justify-between gap-4 py-4 px-6">
                     <h2 class="text-lg font-serif text-stone-900 dark:text-stone-100">{doc.data.title}</h2>
                     <span class="material-symbols-outlined text-stone-500" data-icon="chevron_right">
                       chevron_right

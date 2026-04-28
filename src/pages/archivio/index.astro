@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content'
 import { archiveCategories, archiveCategorySlugs } from '../../constants/archive-categories'
 import MainLayout from '../../layouts/MainLayout.astro'
+import { urlFor } from '../../scripts/utils'
 import '../../styles/global.css'
 
 const collection = await getCollection('documents')
@@ -40,7 +41,7 @@ const categoryCards = archiveCategorySlugs
           {categoryCards.map((item) => (
             <li>
               <a
-                href={`/archivio/${item.slug}`}
+                href={urlFor(`/archivio/${item.slug}`)}
                 class="group block h-full rounded-xl border border-stone-200 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-sm dark:border-stone-800 dark:bg-stone-900 dark:hover:border-primary-800"
               >
                 <div class="flex items-center justify-between gap-3">
