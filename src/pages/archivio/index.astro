@@ -6,8 +6,6 @@ import '../../styles/global.css'
 
 const collection = await getCollection('documents')
 
-console.log('collection', collection)
-
 const categoryCards = archiveCategorySlugs
   .map((item) => {
     const count = collection.filter((doc) => doc.data.category === item).length
