@@ -22,9 +22,9 @@ import '../styles/global.css'
     >
     <Header
       items={[
-        { label: 'Chi siamo', href: '/#about' },
-        { label: 'Il metodo', href: '/#metodo' },
-        { label: 'Archivio', href: '/archivio' },
+        { label: 'Chi siamo', href: `${urlFor('')}#about` },
+        { label: 'Il metodo', href: `${urlFor('')}#metodo` },
+        { label: 'Archivio', href: urlFor('archivio') },
       ]}
     />
 
