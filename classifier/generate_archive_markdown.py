@@ -57,12 +57,7 @@ def extract_first_lines(pdf_path: pathlib.Path, max_lines: int = 10) -> list[str
     return lines
 
 
-def title_from_pdf_or_filename(pdf_path: pathlib.Path, lines: list[str]) -> str:
-    if lines:
-        first = lines[0].strip()
-        if 3 <= len(first) <= 120:
-            return first
-
+def title_from_filename(pdf_path: pathlib.Path) -> str:
     return pdf_path.stem.replace("-", " ").replace("_", " ").strip().title()
 
 
@@ -151,8 +146,6 @@ def rule_based_classification(filename: str, lines: list[str]) -> dict[str, Any]
             0.85,
         ),
     ]
-
-    print(haystack)
 
     for slug, patterns, confidence in rules:
         if any(re.search(pattern, haystack) for pattern in patterns):
@@ -284,15 +277,7 @@ def make_markdown(
 
 def unique_output_path(output_dir: pathlib.Path, slug: str) -> pathlib.Path:
     candidate = output_dir / f"{slug}.md"
-    if not candidate.exists():
-        return candidate
-
-    i = 2
-    while True:
-        candidate = output_dir / f"{slug}-{i}.md"
-        if not candidate.exists():
-            return candidate
-        i += 1
+    return candidate
 
 
 def process_pdf(
@@ -306,8 +291,7 @@ def process_pdf(
     region: str,
 ) -> dict[str, Any]:
     lines = extract_first_lines(pdf_path)
-    title = title_from_pdf_or_filename(pdf_path, lines)
-
+    title = title_from_filename(pdf_path)
     result = rule_based_classification(pdf_path.name, lines)
 
     if result is None and use_bedrock:
@@ -346,7 +330,9 @@ def process_pdf(
         file_path=file_path,
     )
 
-    output_path = unique_output_path(output_dir, slug)
+    now = dt.datetime.now()
+    markdown_filename = f"{now.strftime('%Y-%m-%d')}--{slug}.md"
+    output_path = unique_output_path(output_dir, markdown_filename)
     output_path.write_text(markdown, encoding="utf-8")
 
     return {
