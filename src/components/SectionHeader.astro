@@ -1,0 +1,12 @@
+---
+interface Props {
+  title: string
+  tagLine?: string
+  id?: string
+}
+
+const { title, tagLine, id } = Astro.props
+---
+
+{tagLine && <p class="text-xs uppercase tracking-widest text-primary-600 dark:text-primary-300 mb-1">{tagLine}</p>}
+<h2 id={id} class="text-2xl font-semibold font-serif md:text-3xl">{title}</h2>

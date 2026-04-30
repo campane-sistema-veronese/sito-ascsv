@@ -1,6 +1,7 @@
 ---
 import Hero from '../components/Hero.astro'
 import IndexSection from '../components/IndexSection.astro'
+import UnescoSection from '../components/UnescoSection.astro'
 import MainLayout from '../layouts/MainLayout.astro'
 import { urlFor } from '../scripts/utils'
 import '../styles/global.css'
@@ -52,18 +53,7 @@ import '../styles/global.css'
     <!-- TODO: Cards -->
   </IndexSection>
 
-  <IndexSection
-    id="unesco"
-    title="Patrimonio dell'Umanità"
-    tagLine="UNESCO"
-    imageSrc={urlFor('images/Duomo.jpg')}
-    imageAlt="Duomo di Verona"
-  >
-    Dal 2024 il suono manuale delle campane a sistema veronese è stato riconosciuto come Patrimonio Immateriale
-    dell’Umanità dall’UNESCO, un traguardo importante che testimonia l’unicità e il valore di questa tradizione.
-
-    <!-- TODO: Logo unesco e riferimenti -->
-  </IndexSection>
+  <UnescoSection />
 
   <!-- TODO: Contatti -->
 </MainLayout>
