@@ -1,6 +1,6 @@
+import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
-import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 
 export default defineConfig({
@@ -8,7 +8,7 @@ export default defineConfig({
   title: 'Sito ASCSV',
 
   projectId: 'x34my81r',
-  dataset: 'production',
+  dataset: 'staging',
 
   plugins: [structureTool(), visionTool()],
 

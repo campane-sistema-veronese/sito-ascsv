@@ -58,11 +58,13 @@ export const documentType = defineType({
           'altre-gare',
         ],
       },
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'file',
-      title: 'File PDF',
+      title: 'File',
       type: 'file',
+      validation: (rule) => rule.required(),
     }),
   ],
 })
