@@ -1,0 +1,68 @@
+---
+import SectionCard from './SectionCard.astro'
+import SectionHeader from './SectionHeader.astro'
+---
+
+<section id="metodo" class="py-16 md:py-24 bg-stone-100 dark:bg-stone-900/50" aria-labelledby="metodo-title">
+  <div class="mx-auto max-w-4xl px-8">
+    <div class="text-center">
+      <SectionHeader title="Il sistema alla veronese" tagLine="Il metodo" id="metodo-title" />
+      <p class="mt-4 mx-auto max-w-2xl text-sm leading-relaxed text-stone-600 dark:text-stone-300 md:text-base">
+        Nato nel 1776 a San Giorgio in Bràida, il sistema alla veronese è il più recente tra i sistemi a campane
+        "giranti". Ogni suonatore controlla una campana, guidato da un maestro direttore, dando vita a veri e propri
+        brani musicali.
+      </p>
+    </div>
+
+    <div class="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
+      <div class="md:col-span-2 h-full">
+        <SectionCard title="La rotazione completa">
+          Il cuore del sistema: ogni campana ruota di 360°, senza alcun dispositivo meccanico di arresto. Il suonatore
+          ferma il bronzo con la bocca verso l'alto usando solo tecnica e abilità. Questo controllo totale del tempo di
+          battuta è ciò che rende possibile l'esecuzione di melodie complesse.
+          <div slot="footer" class="flex items-center gap-2 text-primary-700 dark:text-primary-300">
+            <span class="material-symbols-outlined text-xl">rotate_right</span>
+            <span class="text-xs font-semibold uppercase tracking-widest"
+              >La più grande campana girante del mondo è a Verona: 4.566 kg</span
+            >
+          </div>
+        </SectionCard>
+      </div>
+
+      <SectionCard title="Il Concerto" variant="primary">
+        Da 5 a 10 o più campane, accordate in scala diatonica, con almeno un suonatore per ogni bronzo.
+        <span slot="footer" class="material-symbols-outlined text-4xl">music_note</span>
+      </SectionCard>
+
+      <SectionCard title="Il Maestro Direttore">
+        Scandisce a voce la sequenza dello spartito coordinando i suonatori durante la concertazione solenne.
+        <div slot="footer" class="flex items-center gap-2 text-primary-700 dark:text-primary-300">
+          <span class="material-symbols-outlined text-lg">record_voice_over</span>
+          <span class="text-xs font-medium uppercase tracking-widest">Numeri al posto delle note</span>
+        </div>
+      </SectionCard>
+
+      <div class="md:col-span-2 h-full">
+        <SectionCard title="La tecnica esecutiva" variant="contrast">
+          I suonatori operano solitamente dal pian terreno, senza alcun contatto visivo con le campane. Su chiamata del
+          maestro, ogni suonatore imprime un tiro alla fune: la campana compie una rotazione completa emettendo un unico
+          rintocco, poi viene fermata dal lato opposto. Si eseguono anche accordi con due, tre o più campane simultanee.
+          <div slot="footer" class="flex flex-wrap gap-x-6 gap-y-2 text-xs uppercase tracking-widest text-stone-400">
+            <span class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">arrow_upward</span>
+              Campana in piedi
+            </span>
+            <span class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">rotate_right</span>
+              Rotazione di 360°
+            </span>
+            <span class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">queue_music</span>
+              Accordi simultanei
+            </span>
+          </div>
+        </SectionCard>
+      </div>
+    </div>
+  </div>
+</section>

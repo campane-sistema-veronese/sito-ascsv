@@ -1,0 +1,109 @@
+---
+import SectionHeader from './SectionHeader.astro'
+---
+
+<section id="contatti" class="py-16 md:py-24 bg-white dark:bg-stone-950" aria-labelledby="contatti-title">
+  <div class="mx-auto max-w-4xl px-8">
+    <SectionHeader title="Contatti" tagLine="Scrivici" id="contatti-title" />
+
+    <div class="mt-10 flex flex-col gap-4">
+      <!-- Indirizzo -->
+      <div
+        class="@container flex flex-wrap items-center gap-4 rounded-xl border border-stone-200 bg-stone-50 px-6 py-5 dark:border-stone-700 dark:bg-stone-900"
+      >
+        <span
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300"
+        >
+          <span class="material-symbols-outlined text-xl">location_on</span>
+        </span>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-semibold uppercase tracking-widest text-stone-500 dark:text-stone-400">Sede</p>
+          <address class="mt-0.5 not-italic text-sm text-stone-800 dark:text-stone-200">
+            Parrocchia di Isola Rizza
+            <br />
+            Via S. Marco 289, 37050 Isola Rizza (VR)
+          </address>
+        </div>
+        <a
+          href="https://maps.google.com/?q=Via+S.+Marco+289,+37050+Isola+Rizza+VR"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full @xl:w-auto inline-flex items-center gap-1 text-xs font-medium text-primary-700 group dark:text-primary-300"
+        >
+          <span class="group-hover:underline"> Apri in Maps </span>
+          <span class="material-symbols-outlined">open_in_new</span>
+        </a>
+      </div>
+
+      <!-- Email -->
+      <div
+        class="@container flex flex-wrap items-center gap-4 rounded-xl border border-stone-200 bg-stone-50 px-6 py-5 dark:border-stone-700 dark:bg-stone-900"
+      >
+        <span
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300"
+        >
+          <span class="material-symbols-outlined text-xl">mail</span>
+        </span>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-semibold uppercase tracking-widest text-stone-500 dark:text-stone-400">
+            Email — Presidenza A.S.C.S.V.
+          </p>
+          <p class="mt-0.5 text-sm text-stone-800 dark:text-stone-200">
+            Scrivici per informazioni, richieste di suono o collaborazioni.
+          </p>
+        </div>
+        <a
+          href="mailto:presidente@campanesistemaveronese.it"
+          class="w-full @xl:w-auto text-xs font-medium text-primary-700 hover:underline dark:text-primary-300"
+        >
+          presidente@campanesistemaveronese.it
+        </a>
+      </div>
+
+      <!-- Social -->
+      <div
+        class="@container flex flex-wrap items-center gap-4 rounded-xl bg-primary-100 px-6 py-5 text-primary-900 dark:bg-primary-900/40 dark:text-primary-100"
+      >
+        <span
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-200 dark:bg-primary-800/60"
+        >
+          <span class="material-symbols-outlined text-xl">groups</span>
+        </span>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-semibold uppercase tracking-widest opacity-70">Seguici</p>
+          <p class="mt-0.5 text-sm font-medium">Associazione Suonatori di Campane a Sistema Veronese</p>
+        </div>
+        <div class="w-full @xl:w-auto flex items-center gap-3">
+          <a
+            href="https://www.facebook.com/Associazione-Suonatori-di-Campane-a-Sistema-Veronese-136160306409131"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+            class="inline-flex items-center gap-1 text-xs font-medium hover:underline"
+          >
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+              ></path>
+            </svg>
+            Facebook
+          </a>
+          <a
+            href="https://www.instagram.com/ascsv_campane/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            class="inline-flex items-center gap-1 text-xs font-medium hover:underline"
+          >
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+              ></path>
+            </svg>
+            Instagram
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,6 +1,8 @@
 ---
+import ContattiSection from '../components/ContattiSection.astro'
 import Hero from '../components/Hero.astro'
 import IndexSection from '../components/IndexSection.astro'
+import MetodoSection from '../components/MetodoSection.astro'
 import UnescoSection from '../components/UnescoSection.astro'
 import MainLayout from '../layouts/MainLayout.astro'
 import { urlFor } from '../scripts/utils'
@@ -39,21 +41,9 @@ import '../styles/global.css'
     </div>
   </IndexSection>
 
-  <IndexSection
-    id="metodo"
-    title="Il sistema alla veronese"
-    tagLine="Il metodo"
-    imageSrc={urlFor('images/Suonatori2.jpeg')}
-    imageAlt="Suonatori di campane"
-    imagePosition="left"
-  >
-    Il suono alla veronese è nato nel XVIII secolo ed è il più recente a campane “giranti”. Esso permette di eseguire
-    veri e propri brani musicali, in cui ogni suonatore controlla una campana guidato da un sapiente maestro.
-
-    <!-- TODO: Cards -->
-  </IndexSection>
+  <MetodoSection />
 
   <UnescoSection />
 
-  <!-- TODO: Contatti -->
+  <ContattiSection />
 </MainLayout>
