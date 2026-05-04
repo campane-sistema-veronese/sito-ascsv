@@ -1,9 +1,9 @@
 ---
+import { archiveCategories, archiveCategorySlugs } from '@/constants/archive-categories'
+import MainLayout from '@/layouts/MainLayout.astro'
+import { urlFor } from '@/scripts/utils'
+import '@/styles/global.css'
 import { sanityClient } from 'sanity:client'
-import { archiveCategories, archiveCategorySlugs } from '../../constants/archive-categories'
-import MainLayout from '../../layouts/MainLayout.astro'
-import { urlFor } from '../../scripts/utils'
-import '../../styles/global.css'
 
 const allegati = await sanityClient.fetch<{ category: string }[]>(`*[_type == "allegato"]{ category }`)
 

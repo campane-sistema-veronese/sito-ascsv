@@ -1,10 +1,10 @@
 ---
 import { sanityClient } from 'sanity:client'
-import { archiveCategories, archiveCategorySlugs, type CategorySlug } from '../../constants/archive-categories'
-import Button from '../../components/Button.astro'
-import MainLayout from '../../layouts/MainLayout.astro'
-import '../../styles/global.css'
-import { urlFor } from '../../scripts/utils'
+import { archiveCategories, archiveCategorySlugs, type CategorySlug } from '@/constants/archive-categories'
+import Button from '@/components/Button.astro'
+import MainLayout from '@/layouts/MainLayout.astro'
+import '@/styles/global.css'
+import { urlFor } from '@/scripts/utils'
 
 export const getStaticPaths = () =>
   archiveCategorySlugs.map((slug) => ({

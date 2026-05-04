@@ -1,0 +1,73 @@
+---
+interface Props {
+  id: string
+  name: string
+  label: string
+  type?: 'text' | 'number' | 'checkbox'
+  layout?: 'stacked' | 'inline'
+  placeholder?: string
+  min?: number
+  max?: number
+  step?: number
+  class?: string
+}
+
+const {
+  id,
+  name,
+  label,
+  type = 'text',
+  layout = 'stacked',
+  placeholder,
+  min,
+  max,
+  step,
+  class: className = '',
+} = Astro.props as Props
+---
+
+{
+  layout === 'stacked' ? (
+    <div class="flex flex-col gap-1.5">
+      <label for={id} class="text-sm font-medium text-stone-700 dark:text-stone-300">
+        {label}
+      </label>
+      <input
+        type={type}
+        id={id}
+        name={name}
+        placeholder={placeholder}
+        min={min}
+        max={max}
+        step={step}
+        class:list={[
+          'w-full rounded-lg border border-stone-300 dark:border-stone-600 bg-stone-50 dark:bg-stone-800 px-3 py-2 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-primary-500',
+          className,
+        ]}
+      />
+    </div>
+  ) : (
+    <div class="flex items-center justify-between gap-4">
+      <label
+        for={id}
+        class:list={['text-sm text-stone-700 dark:text-stone-300', type === 'checkbox' && 'cursor-pointer']}
+      >
+        {label}
+      </label>
+      <input
+        type={type}
+        id={id}
+        name={name}
+        min={min}
+        max={max}
+        step={step}
+        class:list={[
+          type === 'checkbox'
+            ? 'size-4 rounded accent-primary-600 cursor-pointer'
+            : 'w-20 rounded-lg border border-stone-300 dark:border-stone-600 bg-stone-50 dark:bg-stone-800 px-2 py-1.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-primary-500',
+          className,
+        ]}
+      />
+    </div>
+  )
+}

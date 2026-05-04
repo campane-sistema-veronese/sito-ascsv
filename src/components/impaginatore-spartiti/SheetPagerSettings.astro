@@ -1,0 +1,217 @@
+---
+import FormInput from '../FormInput.astro'
+---
+
+<div class="rounded-xl border border-stone-200 dark:border-stone-800 overflow-hidden">
+  <button
+    id="bsp-settings-toggle"
+    type="button"
+    class="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+    aria-expanded="false"
+    aria-controls="bsp-settings-form"
+  >
+    <span class="flex items-center gap-2">
+      <span class="text-base">⚙</span>
+      Impostazioni
+    </span>
+    <span id="bsp-settings-chevron" class="text-stone-400 transition-transform duration-300">▼</span>
+  </button>
+
+  <div id="bsp-settings-form" class="bsp-settings-panel">
+    <div class="bsp-settings-panel-inner px-4 pb-4 pt-2 flex flex-col gap-4">
+      <FormInput
+        id="input-columns"
+        name="columns"
+        label="Numero di colonne"
+        type="number"
+        layout="inline"
+        min={7}
+        max={15}
+        step={1}
+      />
+      <FormInput
+        id="input-fontSize"
+        name="fontSize"
+        label="Dimensione carattere (pt)"
+        type="number"
+        layout="inline"
+        min={7}
+        max={20}
+        step={1}
+      />
+      <FormInput
+        id="input-bicolorRows"
+        name="bicolorRows"
+        label="Colori righe alternati"
+        type="checkbox"
+        layout="inline"
+      />
+      <FormInput
+        id="input-returnSpacing"
+        name="returnSpacing"
+        label="Spazio sui ritorni"
+        type="checkbox"
+        layout="inline"
+      />
+
+      <!-- Colore ritorni -->
+      <div class="flex items-center justify-between gap-4">
+        <span class="text-sm text-stone-700 dark:text-stone-300">Colore ritorni</span>
+        <div class="flex items-center gap-3">
+          <input
+            type="color"
+            id="input-returnColor"
+            name="returnColor"
+            class="size-8 cursor-pointer rounded border-0 bg-transparent p-0"
+          />
+          <label
+            for="input-returnColorTransparent"
+            class="flex items-center gap-1.5 text-sm text-stone-600 dark:text-stone-400 cursor-pointer"
+          >
+            <input
+              type="checkbox"
+              id="input-returnColorTransparent"
+              name="returnColorTransparent"
+              class="size-4 rounded accent-primary-600 cursor-pointer"
+            />
+            Trasparente
+          </label>
+        </div>
+      </div>
+
+      <!-- Colore pause -->
+      <div class="flex items-center justify-between gap-4">
+        <span class="text-sm text-stone-700 dark:text-stone-300">Colore pause</span>
+        <div class="flex items-center gap-3">
+          <input
+            type="color"
+            id="input-pauseColor"
+            name="pauseColor"
+            class="size-8 cursor-pointer rounded border-0 bg-transparent p-0"
+          />
+          <label
+            for="input-pauseColorTransparent"
+            class="flex items-center gap-1.5 text-sm text-stone-600 dark:text-stone-400 cursor-pointer"
+          >
+            <input
+              type="checkbox"
+              id="input-pauseColorTransparent"
+              name="pauseColorTransparent"
+              class="size-4 rounded accent-primary-600 cursor-pointer"
+            />
+            Trasparente
+          </label>
+        </div>
+      </div>
+
+      <FormInput
+        id="input-colorReturningBells"
+        name="colorReturningBells"
+        label="Colora campane ritorno"
+        type="checkbox"
+        layout="inline"
+      />
+      <FormInput id="input-boldChords" name="boldChords" label="Accordi in grassetto" type="checkbox" layout="inline" />
+
+      <div class="pt-1 border-t border-stone-200 dark:border-stone-700">
+        <button
+          id="bsp-settings-reset"
+          type="button"
+          class="text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors"
+        >
+          ⟲ Ripristina impostazioni predefinite
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bsp-settings-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    overflow: hidden;
+    transition: grid-template-rows 0.3s ease;
+  }
+  .bsp-settings-panel.open {
+    grid-template-rows: 1fr;
+  }
+  .bsp-settings-panel-inner {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  import { UserSettings } from '../../scripts/pager'
+
+  const toggle = document.getElementById('bsp-settings-toggle') as HTMLButtonElement
+  const panel = document.getElementById('bsp-settings-form') as HTMLDivElement
+  const chevron = document.getElementById('bsp-settings-chevron') as HTMLSpanElement
+  const resetBtn = document.getElementById('bsp-settings-reset') as HTMLButtonElement
+
+  const inputs = {
+    columns: document.getElementById('input-columns') as HTMLInputElement,
+    fontSize: document.getElementById('input-fontSize') as HTMLInputElement,
+    bicolorRows: document.getElementById('input-bicolorRows') as HTMLInputElement,
+    returnSpacing: document.getElementById('input-returnSpacing') as HTMLInputElement,
+    returnColor: document.getElementById('input-returnColor') as HTMLInputElement,
+    returnColorTransparent: document.getElementById('input-returnColorTransparent') as HTMLInputElement,
+    pauseColor: document.getElementById('input-pauseColor') as HTMLInputElement,
+    pauseColorTransparent: document.getElementById('input-pauseColorTransparent') as HTMLInputElement,
+    colorReturningBells: document.getElementById('input-colorReturningBells') as HTMLInputElement,
+    boldChords: document.getElementById('input-boldChords') as HTMLInputElement,
+  }
+
+  function applySettings(s: UserSettings) {
+    inputs.columns.value = String(s.columns)
+    inputs.fontSize.value = String(s.fontSize)
+    inputs.bicolorRows.checked = s.bicolorRows
+    inputs.returnSpacing.checked = s.returnSpacing
+    inputs.returnColor.value = s.returnColor
+    inputs.returnColorTransparent.checked = s.returnColorTransparent
+    inputs.pauseColor.value = s.pauseColor
+    inputs.pauseColorTransparent.checked = s.pauseColorTransparent
+    inputs.colorReturningBells.checked = s.colorReturningBells
+    inputs.boldChords.checked = s.boldChords
+  }
+
+  function readSettings(): UserSettings {
+    const s = new UserSettings()
+    const columns = Number(inputs.columns.value)
+    s.columns = columns >= 7 && columns <= 15 ? columns : columns < 7 ? 7 : 15
+    inputs.columns.value = String(s.columns)
+    const fontSize = Number(inputs.fontSize.value)
+    s.fontSize = fontSize >= 7 && fontSize <= 20 ? fontSize : fontSize < 7 ? 7 : 20
+    inputs.fontSize.value = String(s.fontSize)
+    s.bicolorRows = inputs.bicolorRows.checked
+    s.returnSpacing = inputs.returnSpacing.checked
+    s.returnColor = inputs.returnColor.value
+    s.returnColorTransparent = inputs.returnColorTransparent.checked
+    s.pauseColor = inputs.pauseColor.value
+    s.pauseColorTransparent = inputs.pauseColorTransparent.checked
+    s.colorReturningBells = inputs.colorReturningBells.checked
+    s.boldChords = inputs.boldChords.checked
+    return s
+  }
+
+  // Accordion toggle
+  toggle.addEventListener('click', () => {
+    const isOpen = panel.classList.toggle('open')
+    toggle.setAttribute('aria-expanded', String(isOpen))
+    chevron.style.transform = isOpen ? 'rotate(180deg)' : ''
+  })
+
+  // Reset
+  resetBtn.addEventListener('click', () => applySettings(new UserSettings()))
+
+  // Event API — synchronous request/response via CustomEvent detail mutation
+  document.addEventListener('bsp-read-settings', (e) => {
+    ;(e as CustomEvent<{ result: UserSettings }>).detail.result = readSettings()
+  })
+  document.addEventListener('bsp-apply-settings', (e) => {
+    applySettings((e as CustomEvent<UserSettings>).detail)
+  })
+
+  // Apply defaults on init
+  applySettings(new UserSettings())
+</script>
