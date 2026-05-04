@@ -1,10 +1,10 @@
 ---
-import { getCollection } from 'astro:content'
-import { archiveCategories, archiveCategorySlugs, type CategorySlug } from '../../constants/archive-categories'
-import Button from '../../components/Button.astro'
-import MainLayout from '../../layouts/MainLayout.astro'
-import '../../styles/global.css'
-import { urlFor } from '../../scripts/utils'
+import { sanityClient } from 'sanity:client'
+import { archiveCategories, archiveCategorySlugs, type CategorySlug } from '@/constants/archive-categories'
+import Button from '@/components/Button.astro'
+import MainLayout from '@/layouts/MainLayout.astro'
+import '@/styles/global.css'
+import { urlFor } from '@/scripts/utils'
 
 export const getStaticPaths = () =>
   archiveCategorySlugs.map((slug) => ({
@@ -19,18 +19,33 @@ export interface Params {
 const { category: selectedCategorySlug } = Astro.params
 
 if (!selectedCategorySlug || !(selectedCategorySlug in archiveCategories)) {
-  return Astro.redirect('/archivio')
+  return Astro.redirect(urlFor('/archivio'))
 }
 
-const allDocuments = await getCollection('documents')
-const documents = allDocuments
-  .filter((doc) => doc.data.category === selectedCategorySlug)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+type Allegato = {
+  title: string
+  description?: string
+  date: string
+  fileUrl: string
+}
+
+const [documents, allCategories] = await Promise.all([
+  sanityClient.fetch<Allegato[]>(
+    `*[_type == "allegato" && category == $category] {
+      title,
+      description,
+      date,
+      "fileUrl": file.asset->url
+    } | order(title asc)`,
+    { category: selectedCategorySlug },
+  ),
+  sanityClient.fetch<{ category: string }[]>(`*[_type == "allegato"] { category }`),
+])
 
 const categoriesWithCount = Object.values(archiveCategories)
   .map((item) => ({
     ...item,
-    count: allDocuments.filter((doc) => doc.data.category === item.slug).length,
+    count: allCategories.filter((doc) => doc.category === item.slug).length,
   }))
   .filter((item) => item.count > 0)
 
@@ -54,7 +69,7 @@ const currentCategoryMeta = categoriesWithCount.find((item) => item.slug === sel
 
                 return (
                   <a
-                    href={`/archivio/${item.slug}`}
+                    href={urlFor(`/archivio/${item.slug}`)}
                     aria-current={isActive ? 'page' : undefined}
                     class:list={[
                       'flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors',
@@ -76,8 +91,7 @@ const currentCategoryMeta = categoriesWithCount.find((item) => item.slug === sel
         </div>
       </aside>
 
-      <!-- TODO: handle overflow on mobile -->
-      <div>
+      <div class="min-w-0">
         <div class="overflow-x-auto archive-chip-scroll lg:hidden mb-4">
           <nav aria-label="Categorie archivio mobile" class="flex w-max gap-2 pb-1">
             {
@@ -86,7 +100,7 @@ const currentCategoryMeta = categoriesWithCount.find((item) => item.slug === sel
 
                 return (
                   <a
-                    href={`/archivio/${item.slug}`}
+                    href={urlFor(`/archivio/${item.slug}`)}
                     aria-current={isActive ? 'page' : undefined}
                     class:list={[
                       'inline-flex items-center gap-1 rounded-full border px-3 py-2 text-xs font-medium uppercase tracking-wide transition-colors',
@@ -141,9 +155,9 @@ const currentCategoryMeta = categoriesWithCount.find((item) => item.slug === sel
               class="mt-6 divide-y divide-stone-200 bg-white border border-stone-200 dark:divide-stone-700 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-200 rounded-lg overflow-hidden"
             >
               {documents.map((doc) => (
-                <li class="archive-item" data-search-index={`${doc.data.title} ${doc.data.description}`.toLowerCase()}>
-                  <a href={urlFor(doc.data.file)} download class="flex items-center justify-between gap-4 py-4 px-6">
-                    <h2 class="text-lg font-serif text-stone-900 dark:text-stone-100">{doc.data.title}</h2>
+                <li class="archive-item" data-search-index={`${doc.title} ${doc.description ?? ''}`.toLowerCase()}>
+                  <a href={doc.fileUrl} download class="flex items-center justify-between gap-4 py-4 px-6">
+                    <h2 class="text-lg font-serif text-stone-900 dark:text-stone-100">{doc.title}</h2>
                     <span class="material-symbols-outlined text-stone-500" data-icon="chevron_right">
                       chevron_right
                     </span>

@@ -1,15 +1,15 @@
 ---
-import { getCollection } from 'astro:content'
-import { archiveCategories, archiveCategorySlugs } from '../../constants/archive-categories'
-import MainLayout from '../../layouts/MainLayout.astro'
-import { urlFor } from '../../scripts/utils'
-import '../../styles/global.css'
+import { archiveCategories, archiveCategorySlugs } from '@/constants/archive-categories'
+import MainLayout from '@/layouts/MainLayout.astro'
+import { urlFor } from '@/scripts/utils'
+import '@/styles/global.css'
+import { sanityClient } from 'sanity:client'
 
-const collection = await getCollection('documents')
+const allegati = await sanityClient.fetch<{ category: string }[]>(`*[_type == "allegato"]{ category }`)
 
 const categoryCards = archiveCategorySlugs
   .map((item) => {
-    const count = collection.filter((doc) => doc.data.category === item).length
+    const count = allegati.filter((doc) => doc.category === item).length
     return {
       ...archiveCategories[item],
       count,

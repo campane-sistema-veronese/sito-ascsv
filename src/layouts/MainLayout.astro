@@ -1,8 +1,8 @@
 ---
-import Header from '../components/Header.astro'
-import ThemeInit from '../components/ThemeInit.astro'
-import { urlFor } from '../scripts/utils'
-import '../styles/global.css'
+import Header from '@/components/Header.astro'
+import ThemeInit from '@/components/ThemeInit.astro'
+import { urlFor } from '@/scripts/utils'
+import '@/styles/global.css'
 ---
 
 <html lang="it" class="scroll-smooth">
@@ -24,7 +24,11 @@ import '../styles/global.css'
       items={[
         { label: 'Chi siamo', href: `${urlFor('')}#about` },
         { label: 'Il metodo', href: `${urlFor('')}#metodo` },
+        { label: 'Preghiera', href: urlFor('preghiera') },
         { label: 'Archivio', href: urlFor('archivio') },
+        { label: 'Mappe', href: urlFor('mappe') },
+        { label: 'Impaginatore spartiti', href: urlFor('impaginatore-spartiti') },
+        { label: 'Contatti', href: `${urlFor('')}#contatti` },
       ]}
     />
 

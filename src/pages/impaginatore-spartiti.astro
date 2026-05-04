@@ -1,0 +1,108 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro'
+import FormInput from '@/components/FormInput.astro'
+import SheetPagerSettings from '@/components/impaginatore-spartiti/SheetPagerSettings.astro'
+import SheetHistogram from '@/components/impaginatore-spartiti/SheetHistogram.astro'
+---
+
+<MainLayout>
+  <section class="mx-auto w-full max-w-2xl px-4 py-10 md:px-6 md:py-14">
+    <h1 class="mt-6 text-3xl font-serif md:text-5xl">Impaginatore spartiti</h1>
+    <p class="mt-3 text-stone-600 dark:text-stone-400 text-sm">
+      Inserisci il testo dello spartito per generare un PDF impaginato.
+    </p>
+
+    <div class="mt-8 flex flex-col gap-5">
+      <FormInput id="input-title" name="title" label="Titolo" />
+      <FormInput id="input-author" name="author" label="Autore / sottotitolo" />
+
+      <!-- Spartito raw -->
+      <div class="flex flex-col gap-1.5">
+        <label for="input-raw" class="text-sm font-medium text-stone-700 dark:text-stone-300">Spartito</label>
+        <textarea
+          id="input-raw"
+          name="raw"
+          rows="10"
+          placeholder="1,2,3/1,4/2,5/3/1,..."
+          class="w-full rounded-lg border border-stone-300 dark:border-stone-600 bg-stone-50 dark:bg-stone-800 px-3 py-2 text-sm text-stone-900 dark:text-stone-100 font-mono focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y"
+        ></textarea>
+      </div>
+
+      <!-- CTA -->
+      <div class="flex justify-center">
+        <button
+          id="btn-impagina"
+          type="button"
+          class="inline-flex items-center justify-center gap-2 rounded-lg px-8 py-3 text-sm font-medium uppercase tracking-wider transition-colors bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <span id="btn-impagina-text">Impagina</span>
+          <span id="btn-impagina-spinner" class="hidden! animate-spin">↻</span>
+        </button>
+      </div>
+
+      <SheetPagerSettings />
+    </div>
+
+    <SheetHistogram />
+  </section>
+</MainLayout>
+
+<script>
+  import { SheetStats, sheetToPage, UserInput, UserSettings } from '@/scripts/pager'
+
+  const SETTINGS_KEY = 'BSP-USER-SETTINGS'
+
+  const inputTitle = document.getElementById('input-title') as HTMLInputElement
+  const inputAuthor = document.getElementById('input-author') as HTMLInputElement
+  const inputRaw = document.getElementById('input-raw') as HTMLTextAreaElement
+  const btnImpagina = document.getElementById('btn-impagina') as HTMLButtonElement
+  const btnImpaginaText = document.getElementById('btn-impagina-text') as HTMLSpanElement
+  const btnImpaginaSpinner = document.getElementById('btn-impagina-spinner') as HTMLSpanElement
+
+  function readSettings(): UserSettings {
+    const e = new CustomEvent<{ result: UserSettings }>('bsp-read-settings', {
+      detail: { result: new UserSettings() },
+    })
+    document.dispatchEvent(e)
+    return e.detail.result
+  }
+
+  function applySettings(s: UserSettings) {
+    document.dispatchEvent(new CustomEvent('bsp-apply-settings', { detail: s }))
+  }
+
+  btnImpagina.addEventListener('click', async () => {
+    btnImpagina.disabled = true
+    btnImpaginaText.textContent = 'Generazione...'
+    btnImpaginaSpinner.classList.remove('hidden!')
+
+    try {
+      const userInput = new UserInput()
+      userInput.title = inputTitle.value.trim()
+      userInput.author = inputAuthor.value.trim()
+      userInput.raw = inputRaw.value
+
+      const settings = readSettings()
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
+
+      const cells = await sheetToPage(userInput, settings)
+      const stats = SheetStats.from(cells)
+
+      document.dispatchEvent(new CustomEvent('bsp-show-histogram', { detail: stats.noteCount }))
+    } finally {
+      btnImpagina.disabled = false
+      btnImpaginaText.textContent = 'Impagina'
+      btnImpaginaSpinner.classList.add('hidden!')
+    }
+  })
+
+  // Init: load stored settings
+  try {
+    const cached = localStorage.getItem(SETTINGS_KEY)
+    if (cached) {
+      applySettings(UserSettings.fromStorage(cached))
+    }
+  } catch {
+    // ignore
+  }
+</script>

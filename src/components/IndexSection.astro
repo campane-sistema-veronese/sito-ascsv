@@ -1,4 +1,6 @@
 ---
+import SectionHeader from './SectionHeader.astro'
+
 interface Props {
   id: string
   title: string
@@ -14,8 +16,7 @@ const imageOrderClass = imagePosition === 'left' ? 'md:order-1' : 'md:order-2'
 
 <section id={id} class="max-w-4xl mx-auto p-8 grid md:grid-cols-2 gap-6 items-center">
   <div class={textOrderClass}>
-    {tagLine && <p class="text-xs tracking-widest text-primary-600 dark:text-primary-300 uppercase mb-1">{tagLine}</p>}
-    <h2 class="text-2xl font-semibold font-serif">{title}</h2>
+    <SectionHeader title={title} tagLine={tagLine} />
     <p class="mt-8 leading-relaxed text-pretty">
       <slot />
     </p>

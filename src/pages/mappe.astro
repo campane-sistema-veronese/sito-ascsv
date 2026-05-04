@@ -1,0 +1,78 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro'
+import { urlFor } from '@/scripts/utils'
+---
+
+<MainLayout>
+  <section class="mx-auto w-full max-w-6xl px-4 py-10 md:px-6 md:py-14">
+    <h1 class="mt-3 text-3xl font-serif md:text-5xl">Le nostre squadre</h1>
+    <div class="mt-6 flex gap-4 flex-col">
+      <button
+        id="map-open"
+        type="button"
+        class="group relative cursor-zoom-in self-start overflow-hidden rounded-lg"
+        aria-label="Apri mappa a schermo intero"
+      >
+        <img decoding="async" src={urlFor('/images/mappa.png')} alt="Mappa squadre ASCSV" class="block" />
+        <span
+          class="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/20"
+        >
+          <span
+            class="material-symbols-outlined scale-0 text-4xl text-white drop-shadow transition-transform group-hover:scale-100"
+            >zoom_in</span
+          >
+        </span>
+      </button>
+    </div>
+
+    <dialog
+      id="map-dialog"
+      class="m-0 h-dvh max-h-none w-screen max-w-none overflow-auto bg-black/90 p-4 backdrop:bg-black/70 open:flex open:items-start open:justify-center"
+    >
+      <button
+        id="map-close"
+        type="button"
+        aria-label="Chiudi"
+        class="fixed right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur hover:bg-white/30"
+      >
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <img
+        decoding="async"
+        src={urlFor('/images/mappa.png')}
+        alt="Mappa squadre ASCSV"
+        class="max-w-none cursor-zoom-out"
+        id="map-dialog-img"
+      />
+    </dialog>
+
+    <h1 class="mt-6 text-3xl font-serif md:text-5xl">I nostri campanili</h1>
+    <div class="mt-6 flex gap-4 flex-col max-w-6xl">
+      <iframe
+        src="https://versusf.github.io/mappa-campane-sistema-veronese/"
+        title="I nostri campanili"
+        class="h-[60vh]"></iframe>
+    </div>
+  </section>
+</MainLayout>
+
+<script>
+  const openBtn = document.getElementById('map-open') as HTMLButtonElement
+  const dialog = document.getElementById('map-dialog') as HTMLDialogElement
+  const closeBtn = document.getElementById('map-close') as HTMLButtonElement
+  const img = document.getElementById('map-dialog-img') as HTMLImageElement
+
+  openBtn?.addEventListener('click', () => dialog.showModal())
+  closeBtn?.addEventListener('click', () => dialog.close())
+  dialog?.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close()
+  })
+
+  // Toggle zoom on image click
+  let zoomed = false
+  img?.addEventListener('click', () => {
+    zoomed = !zoomed
+    img.style.width = zoomed ? `${img.naturalWidth}px` : ''
+    img.style.cursor = zoomed ? 'zoom-out' : 'zoom-in'
+  })
+</script>
