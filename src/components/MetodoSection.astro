@@ -1,4 +1,5 @@
 ---
+import { urlFor } from '@/scripts/utils'
 import SectionCard from './SectionCard.astro'
 import SectionHeader from './SectionHeader.astro'
 ---
@@ -63,6 +64,85 @@ import SectionHeader from './SectionHeader.astro'
           </div>
         </SectionCard>
       </div>
+
+      <div class="relative md:col-span-2 h-full">
+        <SectionCard title="Il metodo all'opera" variant="normal">
+          <img
+            src={urlFor('/images/CampanileMobileGiorno.jpg')}
+            alt="Campanile mobile durante una concertazione"
+            class="my-3 h-52 w-full rounded-lg object-cover"
+          />
+          All'esterno del campanile si vedono le campane fermarsi con la bocca verso l'alto, pronte per le successive rotazioni.
+          <button
+            slot="footer"
+            onclick="document.getElementById('lightbox-tecnica').showModal()"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold cursor-pointer uppercase tracking-widest text-stone-700 transition-opacity hover:opacity-70 dark:text-stone-300"
+          >
+            <span class="material-symbols-outlined text-base">open_in_full</span>
+            Tavola tecnica
+          </button>
+        </SectionCard>
+      </div>
+
+      <SectionCard title="Il montaggio" variant="contrast">
+        <div class="my-3 flex items-center justify-center rounded-lg bg-stone-50 p-4 dark:bg-stone-900/40">
+          <img
+            src={urlFor('/images/Montaggio sistema veronese - MP2005_03.jpg')}
+            alt="Tavola tecnica del montaggio del sistema alla veronese"
+            class="max-h-48 w-full object-contain"
+          />
+        </div>
+        Schema del montaggio: la struttura portante, l'impianto delle corde e il meccanismo di controllo che permette la rotazione
+        completa della campana.
+        <button
+          slot="footer"
+          onclick="document.getElementById('lightbox-montaggio').showModal()"
+          class="inline-flex items-center gap-1.5 text-xs font-semibold cursor-pointer uppercase tracking-widest text-primary-700 transition-opacity hover:opacity-70 dark:text-primary-300"
+        >
+          <span class="material-symbols-outlined text-base">open_in_full</span>
+          Tavola originale
+        </button>
+      </SectionCard>
     </div>
   </div>
+
+  <dialog
+    id="lightbox-tecnica"
+    class="m-auto w-full max-w-2xl rounded-xl bg-transparent p-0 shadow-2xl backdrop:bg-black/80"
+  >
+    <div class="relative">
+      <button
+        onclick="document.getElementById('lightbox-tecnica').close()"
+        class="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80"
+        aria-label="Chiudi"
+      >
+        <span class="material-symbols-outlined text-base">close</span>
+      </button>
+      <img
+        src={urlFor('/images/Montaggio sistema veronese - MP2001_02.jpg')}
+        alt="Schema di montaggio del sistema alla veronese"
+        class="w-full rounded-xl"
+      />
+    </div>
+  </dialog>
+
+  <dialog
+    id="lightbox-montaggio"
+    class="m-auto w-full max-w-2xl rounded-xl bg-transparent p-0 shadow-2xl backdrop:bg-black/80"
+  >
+    <div class="relative">
+      <button
+        onclick="document.getElementById('lightbox-montaggio').close()"
+        class="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80"
+        aria-label="Chiudi"
+      >
+        <span class="material-symbols-outlined text-base">close</span>
+      </button>
+      <img
+        src={urlFor('/images/Montaggio sistema veronese - MP2001_01.jpg')}
+        alt="Tavola originale del montaggio del sistema alla veronese"
+        class="w-full rounded-xl"
+      />
+    </div>
+  </dialog>
 </section>
