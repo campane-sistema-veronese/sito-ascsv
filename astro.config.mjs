@@ -12,6 +12,7 @@ export default defineConfig({
 
   // New config for top level domain, without base path
   site: 'https://campanesistemaveronese.it',
+  base: '/',
 
   vite: {
     plugins: [tailwindcss()],
