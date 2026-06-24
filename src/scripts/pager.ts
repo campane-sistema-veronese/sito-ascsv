@@ -1,3 +1,19 @@
+import {
+  AlignmentType,
+  BorderStyle,
+  Document,
+  HeightRule,
+  Packer,
+  PageOrientation,
+  Paragraph,
+  Table,
+  TableCell,
+  TableLayoutType,
+  TableRow,
+  TextRun,
+  VerticalAlign,
+  WidthType,
+} from 'docx'
 import jsPDF from 'jspdf'
 
 export class UserInput {
@@ -289,8 +305,270 @@ async function generatePdf(userInput: UserInput, cells: string[], settings: User
   doc.save(toSafePdfFileName(userInput.title))
 }
 
-export async function sheetToPage(userInput: UserInput, settings: UserSettings): Promise<string[]> {
+export async function generateDocx(userInput: UserInput, cells: string[], settings: UserSettings): Promise<void> {
+  type RgbColor = [number, number, number]
+  type RenderCell = {
+    text: string
+    span: number
+    fontSize: number
+    bold: boolean
+    fillColor?: RgbColor
+  }
+
+  const hexToRgb = (hex: string): RgbColor => {
+    const clean = hex.replace('#', '')
+    const num = Number.parseInt(clean, 16)
+    return [(num >> 16) & 0xff, (num >> 8) & 0xff, num & 0xff]
+  }
+
+  const rgbToHex = (color: RgbColor): string =>
+    color
+      .map((part) => part.toString(16).padStart(2, '0'))
+      .join('')
+      .toUpperCase()
+
+  const countColumns = (row: RenderCell[]) => row.reduce((acc, item) => acc + item.span, 0)
+
+  const rows: RenderCell[][] = []
+  let currentRow: RenderCell[] = []
+  const flushRow = () => {
+    if (currentRow.length > 0) {
+      rows.push(currentRow)
+      currentRow = []
+    }
+  }
+
+  const pauseColor = settings.pauseColorTransparent ? undefined : hexToRgb(settings.pauseColor)
+  const returnColor = settings.returnColorTransparent ? undefined : hexToRgb(settings.returnColor)
+
+  cells.forEach((cell, i) => {
+    if (cell === 'P') {
+      currentRow.push({
+        text: 'P',
+        span: 1,
+        fontSize: settings.fontSize,
+        bold: false,
+        fillColor: pauseColor,
+      })
+    } else if (cell === '') {
+      if (settings.returnSpacing) {
+        currentRow.push({
+          text: '',
+          span: 1,
+          fontSize: settings.fontSize,
+          bold: false,
+          fillColor: returnColor,
+        })
+      }
+    } else {
+      const span = cell.length > 5 ? 2 : 1
+      if (span === 2 && countColumns(currentRow) === settings.columns - 1) {
+        currentRow.push({ text: '', span: 1, fontSize: settings.fontSize, bold: false })
+        flushRow()
+      }
+      const isReturn = cells[i + 1] === '' || cells[i - 1] === ''
+      let color: RgbColor | undefined
+      if (settings.colorReturningBells && isReturn) {
+        color = hexToRgb(settings.returnColor)
+      }
+      currentRow.push({
+        text: cell,
+        span,
+        fontSize: settings.fontSize,
+        bold: settings.boldChords && cell.length > 2,
+        fillColor: color,
+      })
+    }
+
+    if (countColumns(currentRow) >= settings.columns) {
+      flushRow()
+    }
+  })
+  flushRow()
+
+  const rowCount = Math.max(1, rows.length)
+  const tableHeightMm = Math.max(20, 246)
+  const rowHeightMm = Math.max(7, Math.min(14, tableHeightMm / rowCount))
+  const mmToTwip = (mm: number) => Math.round(mm * 56.692913)
+
+  const evenColor: RgbColor = [238, 238, 238]
+  const oddColor: RgbColor = [255, 255, 255]
+
+  const tableRows: TableRow[] = rows.map((row, rowIndex) => {
+    const defaultRowColor = settings.bicolorRows && rowIndex % 2 === 0 ? evenColor : oddColor
+    const rowCells: TableCell[] = []
+
+    row.forEach((item) => {
+      const fill = item.fillColor ?? defaultRowColor
+      rowCells.push(
+        new TableCell({
+          columnSpan: item.span,
+          verticalAlign: VerticalAlign.CENTER,
+          shading: {
+            fill: rgbToHex(fill),
+          },
+          borders: {
+            top: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+            bottom: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+            left: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+            right: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+          },
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({
+                  text: item.text || ' ',
+                  size: Math.round(item.fontSize * 2),
+                  bold: item.bold,
+                  font: 'Arial',
+                }),
+              ],
+            }),
+          ],
+        }),
+      )
+    })
+
+    const missing = settings.columns - countColumns(row)
+    for (let i = 0; i < missing; i++) {
+      rowCells.push(
+        new TableCell({
+          verticalAlign: VerticalAlign.CENTER,
+          shading: {
+            fill: rgbToHex(defaultRowColor),
+          },
+          children: [new Paragraph({ children: [new TextRun(' ')] })],
+          borders: {
+            top: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+            bottom: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+            left: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+            right: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+          },
+        }),
+      )
+    }
+
+    return new TableRow({
+      height: {
+        value: mmToTwip(rowHeightMm),
+        rule: HeightRule.EXACT,
+      },
+      children: rowCells,
+    })
+  })
+
+  if (tableRows.length === 0) {
+    tableRows.push(
+      new TableRow({
+        height: {
+          value: mmToTwip(14),
+          rule: HeightRule.EXACT,
+        },
+        children: [
+          new TableCell({
+            columnSpan: settings.columns,
+            children: [new Paragraph({ children: [new TextRun(' ')] })],
+            borders: {
+              top: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+              bottom: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+              left: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+              right: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+            },
+          }),
+        ],
+      }),
+    )
+  }
+
+  const table = new Table({
+    width: {
+      size: mmToTwip(190),
+      type: WidthType.DXA,
+    },
+    layout: TableLayoutType.FIXED,
+    rows: tableRows,
+  })
+
+  const doc = new Document({
+    sections: [
+      {
+        properties: {
+          page: {
+            size: {
+              orientation: PageOrientation.PORTRAIT,
+              width: 11906,
+              height: 16838,
+            },
+            margin: {
+              top: mmToTwip(15),
+              right: mmToTwip(10),
+              bottom: mmToTwip(10),
+              left: mmToTwip(10),
+            },
+          },
+        },
+        children: [
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { after: 200 },
+            children: [
+              new TextRun({
+                text: userInput.title || ' ',
+                bold: true,
+                size: 44,
+                font: 'Arial',
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { after: 200 },
+            children: [
+              new TextRun({
+                text: userInput.author || ' ',
+                size: 28,
+                font: 'Arial',
+              }),
+            ],
+          }),
+          table,
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 200 },
+            children: [
+              new TextRun({
+                text: `Totale battute: ${cells.filter((c) => c && c !== 'P').length}`,
+                size: 24,
+                font: 'Arial',
+              }),
+            ],
+          }),
+        ],
+      },
+    ],
+  })
+
+  const blob = await Packer.toBlob(doc)
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = toSafePdfFileName(userInput.title).replace(/\.pdf$/i, '.docx')
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(link.href)
+}
+
+export async function sheetToPage(
+  userInput: UserInput,
+  settings: UserSettings,
+  format: 'pdf' | 'docx',
+): Promise<string[]> {
   const cells = computeCells(userInput.raw)
-  await generatePdf(userInput, cells, settings)
+  if (format === 'pdf') {
+    await generatePdf(userInput, cells, settings)
+  } else if (format === 'docx') {
+    await generateDocx(userInput, cells, settings)
+  }
   return cells
 }

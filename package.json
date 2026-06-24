@@ -17,6 +17,7 @@
     "@tailwindcss/vite": "^4.2.4",
     "astro": "^6.1.8",
     "astro-portabletext": "^0.13.0",
+    "docx": "^9.7.1",
     "jspdf": "^4.2.1",
     "sanity": "^5.22.0",
     "styled-components": "^6.4.1",

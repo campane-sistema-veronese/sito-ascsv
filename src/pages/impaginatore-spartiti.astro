@@ -29,14 +29,23 @@ import SheetHistogram from '@/components/impaginatore-spartiti/SheetHistogram.as
       </div>
 
       <!-- CTA -->
-      <div class="flex justify-center">
+      <div class="flex justify-center gap-4">
         <button
-          id="btn-impagina"
+          id="btn-impagina-pdf"
           type="button"
           class="inline-flex items-center justify-center gap-2 rounded-lg px-8 py-3 text-sm font-medium uppercase tracking-wider transition-colors bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          <span id="btn-impagina-text">Impagina</span>
-          <span id="btn-impagina-spinner" class="hidden! animate-spin">↻</span>
+          <span id="btn-impagina-pdf-text">Impagina PDF</span>
+          <span id="btn-impagina-pdf-spinner" class="hidden! animate-spin">↻</span>
+        </button>
+
+        <button
+          id="btn-impagina-docx"
+          type="button"
+          class="inline-flex items-center justify-center gap-2 rounded-lg px-8 py-3 text-sm font-medium uppercase tracking-wider transition-colors bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <span id="btn-impagina-docx-text">Impagina DOCX</span>
+          <span id="btn-impagina-docx-spinner" class="hidden! animate-spin">↻</span>
         </button>
       </div>
 
@@ -55,9 +64,12 @@ import SheetHistogram from '@/components/impaginatore-spartiti/SheetHistogram.as
   const inputTitle = document.getElementById('input-title') as HTMLInputElement
   const inputAuthor = document.getElementById('input-author') as HTMLInputElement
   const inputRaw = document.getElementById('input-raw') as HTMLTextAreaElement
-  const btnImpagina = document.getElementById('btn-impagina') as HTMLButtonElement
-  const btnImpaginaText = document.getElementById('btn-impagina-text') as HTMLSpanElement
-  const btnImpaginaSpinner = document.getElementById('btn-impagina-spinner') as HTMLSpanElement
+  const btnImpaginaPdf = document.getElementById('btn-impagina-pdf') as HTMLButtonElement
+  const btnImpaginaPdfText = document.getElementById('btn-impagina-pdf-text') as HTMLSpanElement
+  const btnImpaginaPdfSpinner = document.getElementById('btn-impagina-pdf-spinner') as HTMLSpanElement
+  const btnImpaginaDocx = document.getElementById('btn-impagina-docx') as HTMLButtonElement
+  const btnImpaginaDocxText = document.getElementById('btn-impagina-docx-text') as HTMLSpanElement
+  const btnImpaginaDocxSpinner = document.getElementById('btn-impagina-docx-spinner') as HTMLSpanElement
 
   function readSettings(): UserSettings {
     const e = new CustomEvent<{ result: UserSettings }>('bsp-read-settings', {
@@ -71,28 +83,47 @@ import SheetHistogram from '@/components/impaginatore-spartiti/SheetHistogram.as
     document.dispatchEvent(new CustomEvent('bsp-apply-settings', { detail: s }))
   }
 
-  btnImpagina.addEventListener('click', async () => {
-    btnImpagina.disabled = true
-    btnImpaginaText.textContent = 'Generazione...'
-    btnImpaginaSpinner.classList.remove('hidden!')
+  function impagina(format: 'pdf' | 'docx') {
+    const userInput = new UserInput()
+    userInput.title = inputTitle.value.trim()
+    userInput.author = inputAuthor.value.trim()
+    userInput.raw = inputRaw.value
+
+    const settings = readSettings()
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
+
+    return sheetToPage(userInput, settings, format)
+  }
+
+  btnImpaginaPdf.addEventListener('click', async () => {
+    btnImpaginaPdf.disabled = true
+    btnImpaginaPdfText.textContent = 'Generazione...'
+    btnImpaginaPdfSpinner.classList.remove('hidden!')
 
     try {
-      const userInput = new UserInput()
-      userInput.title = inputTitle.value.trim()
-      userInput.author = inputAuthor.value.trim()
-      userInput.raw = inputRaw.value
-
-      const settings = readSettings()
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
-
-      const cells = await sheetToPage(userInput, settings)
+      const cells = await impagina('pdf')
       const stats = SheetStats.from(cells)
-
       document.dispatchEvent(new CustomEvent('bsp-show-histogram', { detail: stats.noteCount }))
     } finally {
-      btnImpagina.disabled = false
-      btnImpaginaText.textContent = 'Impagina'
-      btnImpaginaSpinner.classList.add('hidden!')
+      btnImpaginaPdf.disabled = false
+      btnImpaginaPdfText.textContent = 'Impagina PDF'
+      btnImpaginaPdfSpinner.classList.add('hidden!')
+    }
+  })
+
+  btnImpaginaDocx.addEventListener('click', async () => {
+    btnImpaginaDocx.disabled = true
+    btnImpaginaDocxText.textContent = 'Generazione...'
+    btnImpaginaDocxSpinner.classList.remove('hidden!')
+
+    try {
+      const cells = await impagina('docx')
+      const stats = SheetStats.from(cells)
+      document.dispatchEvent(new CustomEvent('bsp-show-histogram', { detail: stats.noteCount }))
+    } finally {
+      btnImpaginaDocx.disabled = false
+      btnImpaginaDocxText.textContent = 'Impagina DOCX'
+      btnImpaginaDocxSpinner.classList.add('hidden!')
     }
   })
 
