@@ -6,8 +6,12 @@ import sanity from '@sanity/astro'
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://campane-sistema-veronese.github.io',
-  base: '/sito-ascsv',
+  // Old config for github page only
+  // site: 'https://campane-sistema-veronese.github.io',
+  // base: '/sito-ascsv',
+
+  // New config for top level domain, without base path
+  site: 'https://campanesistemaveronese.it',
 
   vite: {
     plugins: [tailwindcss()],
