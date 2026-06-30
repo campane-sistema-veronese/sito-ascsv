@@ -1,5 +1,5 @@
 ---
-import { sanityClient } from 'sanity:client'
+import { fetchCategoriesWithCount, fetchDocuments } from '@/scripts/sanity-fetch'
 import { archiveCategories, archiveCategorySlugs, type CategorySlug } from '@/constants/archive-categories'
 import Button from '@/components/Button.astro'
 import MainLayout from '@/layouts/MainLayout.astro'
@@ -22,25 +22,7 @@ if (!selectedCategorySlug || !(selectedCategorySlug in archiveCategories)) {
   return Astro.redirect(urlFor('/archivio'))
 }
 
-type Allegato = {
-  title: string
-  description?: string
-  date: string
-  fileUrl: string
-}
-
-const [documents, allCategories] = await Promise.all([
-  sanityClient.fetch<Allegato[]>(
-    `*[_type == "allegato" && category == $category] {
-      title,
-      description,
-      date,
-      "fileUrl": file.asset->url
-    } | order(title asc)`,
-    { category: selectedCategorySlug },
-  ),
-  sanityClient.fetch<{ category: string }[]>(`*[_type == "allegato"] { category }`),
-])
+const [documents, allCategories] = await Promise.all([fetchDocuments(selectedCategorySlug), fetchCategoriesWithCount()])
 
 const categoriesWithCount = Object.values(archiveCategories)
   .map((item) => ({
@@ -53,7 +35,7 @@ const currentCategoryMeta = categoriesWithCount.find((item) => item.slug === sel
 ---
 
 <MainLayout>
-  <section class="mx-auto w-full max-w-7xl px-4 py-10 md:px-6 md:py-12">
+  <section class="mx-auto w-full max-w-7xl px-4 py-10 md:px-6 md:py-12" data-selected-category={selectedCategorySlug}>
     <Button title="Torna alle categorie" href={urlFor('archivio')} variant="text" icon="arrow_back" size="md" />
 
     <div class="mt-6 grid gap-8 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-10">
@@ -152,6 +134,8 @@ const currentCategoryMeta = categoriesWithCount.find((item) => item.slug === sel
           ) : (
             <ul
               id="archive-list"
+              data-ssr-mode="true"
+              data-ssr-documents={JSON.stringify(documents)}
               class="mt-6 divide-y divide-stone-200 bg-white border border-stone-200 dark:divide-stone-700 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-200 rounded-lg overflow-hidden"
             >
               {documents.map((doc) => (
@@ -180,26 +164,90 @@ const currentCategoryMeta = categoriesWithCount.find((item) => item.slug === sel
 </MainLayout>
 
 <script>
-  const searchInput = document.querySelector('#archive-search') as HTMLInputElement | null
-  const list = document.querySelector('#archive-list')
-  const items = Array.from(document.querySelectorAll<HTMLElement>('.archive-item'))
-  const emptyMessage = document.querySelector('#archive-empty-search')
+  import type { CategorySlug } from '@/constants/archive-categories'
+  import { fetchDocuments } from '@/scripts/sanity-fetch'
 
-  if (searchInput && list && items.length > 0 && emptyMessage) {
-    searchInput.addEventListener('input', () => {
-      const query = searchInput.value.trim().toLowerCase()
-      let visibleItems = 0
+  const mainSection = document.querySelector<HTMLElement>('section[data-selected-category]')
+  const selectedCategorySlug = (mainSection?.dataset.selectedCategory as CategorySlug) || 'altre-gare'
 
-      items.forEach((item) => {
-        const index = item.dataset.searchIndex ?? ''
-        const isVisible = query.length === 0 || index.includes(query)
+  /**
+   * Setup search functionality
+   */
+  function setupSearch() {
+    const searchInput = document.querySelector<HTMLInputElement>('#archive-search')
+    const list = document.querySelector('#archive-list')
+    const items = Array.from(document.querySelectorAll<HTMLElement>('.archive-item'))
+    const emptyMessage = document.querySelector('#archive-empty-search')
 
-        item.classList.toggle('hidden', !isVisible)
-        if (isVisible) visibleItems += 1
+    if (searchInput && list && items.length > 0 && emptyMessage) {
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase()
+        let visibleItems = 0
+
+        items.forEach((item) => {
+          const index = item.dataset.searchIndex ?? ''
+          const isVisible = query.length === 0 || index.includes(query)
+
+          item.classList.toggle('hidden', !isVisible)
+          if (isVisible) visibleItems += 1
+        })
+
+        list.classList.toggle('hidden', visibleItems === 0)
+        emptyMessage.classList.toggle('hidden', visibleItems > 0)
       })
-
-      list.classList.toggle('hidden', visibleItems === 0)
-      emptyMessage.classList.toggle('hidden', visibleItems > 0)
-    })
+    }
   }
+
+  function showWarningBanner() {
+    const searchInput = document.querySelector('#archive-search')
+    if (searchInput && !document.querySelector('#archive-fetch-warning')) {
+      const warning = document.createElement('div')
+      warning.id = 'archive-fetch-warning'
+      warning.className =
+        'mt-4 p-4 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-800 dark:bg-yellow-950/20 dark:border-yellow-900 dark:text-yellow-200 text-sm'
+      warning.textContent = "Impossibile aggiornare i dati dal server. Visualizzando l'ultima versione disponibile."
+      searchInput.parentElement?.insertAdjacentElement('afterend', warning)
+    }
+  }
+
+  /**
+   * Fetch documents client-side and replace SSG content
+   */
+  async function loadDocuments() {
+    const list = document.querySelector('#archive-list')
+    if (!list) return
+
+    try {
+      const documents = await fetchDocuments(selectedCategorySlug)
+
+      const html = documents
+        .map(
+          (doc) => `
+        <li class="archive-item" data-search-index="${(doc.title + ' ' + (doc.description ?? '')).toLowerCase()}">
+          <a href="${doc.fileUrl}" download class="flex items-center justify-between gap-4 py-4 px-6">
+            <h2 class="text-lg font-serif text-stone-900 dark:text-stone-100">${doc.title}</h2>
+            <span class="material-symbols-outlined text-stone-500" data-icon="chevron_right">chevron_right</span>
+          </a>
+        </li>
+      `,
+        )
+        .join('')
+
+      list.innerHTML = html
+      list.removeAttribute('data-ssr-mode')
+    } catch (error) {
+      console.error('Failed to fetch documents:', error)
+      showWarningBanner()
+    } finally {
+      setupSearch()
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadDocuments)
+  } else {
+    loadDocuments()
+  }
+
+  setupSearch()
 </script>

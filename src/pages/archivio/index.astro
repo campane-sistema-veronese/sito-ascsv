@@ -1,12 +1,11 @@
 ---
 import { archiveCategories, archiveCategorySlugs } from '@/constants/archive-categories'
 import MainLayout from '@/layouts/MainLayout.astro'
+import { fetchCategoriesWithCount } from '@/scripts/sanity-fetch'
 import { urlFor } from '@/scripts/utils'
 import '@/styles/global.css'
-import { sanityClient } from 'sanity:client'
 
-const allegati = await sanityClient.fetch<{ category: string }[]>(`*[_type == "allegato"]{ category }`)
-
+const allegati = await fetchCategoriesWithCount()
 const categoryCards = archiveCategorySlugs
   .map((item) => {
     const count = allegati.filter((doc) => doc.category === item).length
@@ -37,9 +36,9 @@ const categoryCards = archiveCategorySlugs
           Nessun documento disponibile.
         </p>
       ) : (
-        <ul class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <ul class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3" data-ssr-mode="true">
           {categoryCards.map((item) => (
-            <li>
+            <li data-category-slug={item.slug}>
               <a
                 href={urlFor(`/archivio/${item.slug}`)}
                 class="group block h-full rounded-xl border border-stone-200 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-sm dark:border-stone-800 dark:bg-stone-900 dark:hover:border-primary-800"
@@ -48,7 +47,7 @@ const categoryCards = archiveCategorySlugs
                   <span class="material-symbols-outlined text-2xl text-primary-600 dark:text-primary-300">
                     {item.icon}
                   </span>
-                  <span class="text-xs uppercase tracking-wide text-stone-500 dark:text-stone-400">
+                  <span data-count-display class="text-xs uppercase tracking-wide text-stone-500 dark:text-stone-400">
                     {item.count} {item.count === 1 ? 'documento' : 'documenti'}
                   </span>
                 </div>
@@ -68,3 +67,61 @@ const categoryCards = archiveCategorySlugs
     }
   </section>
 </MainLayout>
+
+<script>
+  import { fetchCategoriesWithCount } from '@/scripts/sanity-fetch'
+
+  /**
+   * Fetch categories with count and update UI
+   */
+  async function loadCategoryCounts() {
+    try {
+      const categoriesWithCount = await fetchCategoriesWithCount()
+
+      // Create a map for quick lookup
+      const countMap = new Map(categoriesWithCount.map((item) => [item.category, item.count]))
+
+      // Update count displays
+      const cards = document.querySelectorAll<HTMLElement>('li[data-category-slug]')
+      cards.forEach((card) => {
+        const slug = card.dataset.categorySlug
+        if (!slug) return
+
+        const count = countMap.get(slug)
+        if (count !== undefined) {
+          const countDisplay = card.querySelector('[data-count-display]')
+          if (countDisplay) {
+            countDisplay.textContent = `${count} ${count === 1 ? 'documento' : 'documenti'}`
+          }
+        }
+      })
+
+      // Remove SSR mode indicator
+      const container = document.querySelector('ul[data-ssr-mode]')
+      if (container) {
+        container.removeAttribute('data-ssr-mode')
+      }
+    } catch (error) {
+      console.error('Failed to fetch category counts:', error)
+
+      // Show warning banner
+      const header = document.querySelector('header.rounded-2xl')
+      if (header && !document.querySelector('#archive-category-fetch-warning')) {
+        const warning = document.createElement('div')
+        warning.id = 'archive-category-fetch-warning'
+        warning.className =
+          'mt-4 p-4 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-800 dark:bg-yellow-950/20 dark:border-yellow-900 dark:text-yellow-200 text-sm'
+        warning.textContent =
+          "Impossibile aggiornare i conteggi dal server. Visualizzando l'ultima versione disponibile."
+        header.insertAdjacentElement('afterend', warning)
+      }
+    }
+  }
+
+  // Load category counts when page is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadCategoryCounts)
+  } else {
+    loadCategoryCounts()
+  }
+</script>
