@@ -27,7 +27,7 @@ const [documents, allCategories] = await Promise.all([fetchDocuments(selectedCat
 const categoriesWithCount = Object.values(archiveCategories)
   .map((item) => ({
     ...item,
-    count: allCategories.filter((doc) => doc.category === item.slug).length,
+    count: allCategories.find((entry) => entry.category === item.slug)?.count || 0,
   }))
   .filter((item) => item.count > 0)
 

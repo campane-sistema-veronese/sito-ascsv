@@ -8,7 +8,7 @@ import '@/styles/global.css'
 const allegati = await fetchCategoriesWithCount()
 const categoryCards = archiveCategorySlugs
   .map((item) => {
-    const count = allegati.filter((doc) => doc.category === item).length
+    const count = allegati.find((entry) => entry.category === item)?.count || 0
     return {
       ...archiveCategories[item],
       count,
